@@ -62,5 +62,10 @@ namespace CourseLibrary.API.Controllers
             return CreatedAtRoute("GetAuthorCollection", new { ids = authorIds }, authorDtos);
         }
 
+        [HttpOptions]
+        public IActionResult GetAuthorsOptions()
+        {
+
+        }
     }
 }
