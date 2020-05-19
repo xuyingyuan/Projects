@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
 namespace CourseLibrary.API
 {
@@ -35,7 +36,12 @@ namespace CourseLibrary.API
             services.AddControllers(setupAction=>
             {
                 setupAction.ReturnHttpNotAcceptable = true;                
-            }).AddXmlDataContractSerializerFormatters()     //support xml format
+            })
+            .AddNewtonsoftJson(setupAction =>
+            {
+                setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            })
+            .AddXmlDataContractSerializerFormatters()     //support xml format
             .ConfigureApiBehaviorOptions(setupAction =>
             {
                 //for more detail error message in body if there is validation error
@@ -80,7 +86,7 @@ namespace CourseLibrary.API
                         ContentTypes = { "application/problem+json" }
                     };
                 };
-            }); ;
+            }); 
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
