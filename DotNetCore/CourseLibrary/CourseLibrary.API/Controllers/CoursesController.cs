@@ -111,7 +111,23 @@ namespace CourseLibrary.API.Controllers
             
             if(courseFromEntity == null)
             {
-                return NotFound(); //404
+                // return NotFound(); //404
+                //create a course => upsert for patch
+                var sourseforUpdateDto = new CourseForUpdateDto();
+                patchDocument.ApplyTo(sourseforUpdateDto, ModelState);
+                if (!TryValidateModel(sourseforUpdateDto))
+                {
+                    return ValidationProblem(ModelState);
+                }
+                var coursetoAdd = _mapper.Map<Entities.Course>(sourseforUpdateDto);
+                coursetoAdd.Id = courseId;
+
+                _courselibraryRepository.AddCourse(authorId, coursetoAdd);
+                _courselibraryRepository.Save();
+
+                var coursetoReturn = _mapper.Map<CoursesDto>(coursetoAdd);
+
+                return CreatedAtRoute("GetCoursesForAuthor", new { authorId = authorId, courseId = coursetoReturn.Id }, coursetoReturn);
             }
 
             var courseToPatch = _mapper.Map<CourseForUpdateDto>(courseFromEntity);
@@ -131,9 +147,30 @@ namespace CourseLibrary.API.Controllers
 
         }
 
+        [HttpDelete("{courseId}")]
+        public ActionResult DeleteCourseForAuthor(Guid authorId, Guid courseId)
+        {
+            if (!_courselibraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+            var courseToBeDelete = _courselibraryRepository.GetCourse(authorId, courseId);
+            if(courseToBeDelete == null)
+            {
+                return NotFound();
+            }
+
+            _courselibraryRepository.DeleteCourse(courseToBeDelete);
+            _courselibraryRepository.Save();
+
+            return NoContent();
+
+        }
+
         public override ActionResult ValidationProblem([ActionResultObjectValue] ModelStateDictionary modelstatedicionary)
         {
-            var options = HttpContext.RequestServices.GetRequiredService<IOptions<ApiBehaviorOptions>>();
+            var options = HttpContext.RequestServices
+                    .GetRequiredService<IOptions<ApiBehaviorOptions>>();
             return (ActionResult)options.Value.InvalidModelStateResponseFactory(ControllerContext);
             //return base.ValidationProblem(modelstatedicionary);
         }

@@ -75,5 +75,27 @@ namespace CourseLibrary.API.Controllers
 
             return CreatedAtRoute("GetAuthor", new { authorId = authorDto.Id }, authorDto);
         }
+
+        [HttpDelete("{authorId}")]
+        public ActionResult DeleteAuthor(Guid authorId)
+        {
+            var authorToDelete = _courselibraryRepository.GetAuthor(authorId);
+            if (authorToDelete==null)
+            {
+                return NotFound();
+            }
+            //No need below, when parent is deleted then the child will be deleted too            
+            //var coursesForAuthor = _courselibraryRepository.GetCourses(authorId);
+            //if(coursesForAuthor.Count() > 0)
+            //{
+            //    foreach(var courseForAuthor in coursesForAuthor)
+            //    {
+            //        _courselibraryRepository.DeleteCourse(courseForAuthor);
+            //    }
+            //}
+            _courselibraryRepository.DeleteAuthor(authorToDelete);
+            _courselibraryRepository.Save();
+            return NoContent();
+        }
     }
 }
