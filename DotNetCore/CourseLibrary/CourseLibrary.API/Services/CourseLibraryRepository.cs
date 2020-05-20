@@ -1,5 +1,6 @@
 ﻿using CourseLibrary.API.DbContexts;
 using CourseLibrary.API.Entities;
+using CourseLibrary.API.Helpers;
 using CourseLibrary.API.ResourceParameters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
@@ -126,14 +127,14 @@ namespace CourseLibrary.API.Services
         }
 
 
-        public IEnumerable<Author> GetAuthors(AuthorResourceParameters authorResourceParameters)
+        public PageList<Author> GetAuthors(AuthorResourceParameters authorResourceParameters)
         {
 
             string mainCategory = authorResourceParameters.MainCategory;
             string searchQuery = authorResourceParameters.SearchQuery;
 
-            if (string.IsNullOrEmpty(mainCategory) && string.IsNullOrEmpty(searchQuery))
-                return GetAuthors();
+            //if (string.IsNullOrEmpty(mainCategory) && string.IsNullOrEmpty(searchQuery))
+            //    return GetAuthors();
 
             var collection = _context.Authors as IQueryable<Author>;
 
@@ -150,7 +151,14 @@ namespace CourseLibrary.API.Services
                 || a.FirstName.Contains(searchQuery) 
                 || a.LastName.Contains(searchQuery));
             }
-            return collection.ToList();
+
+            //paging and page size
+            //return collection.
+            //    Skip(authorResourceParameters.PageSize*(authorResourceParameters.PageNumber-1))
+            //    .Take(authorResourceParameters.PageSize)
+            //    .ToList();
+
+            return PageList<Author>.Create(collection, authorResourceParameters.PageNumber, authorResourceParameters.PageSize);
                
         }
 
