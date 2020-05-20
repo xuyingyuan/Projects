@@ -86,7 +86,9 @@ namespace CourseLibrary.API
                         ContentTypes = { "application/problem+json" }
                     };
                 };
-            }); 
+            });
+
+            services.AddScoped<IPropertyMappingService, PropertyMappingService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

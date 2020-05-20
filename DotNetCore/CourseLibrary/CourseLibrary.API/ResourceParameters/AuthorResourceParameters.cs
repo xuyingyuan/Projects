@@ -19,6 +19,8 @@ namespace CourseLibrary.API.ResourceParameters
         public int PageSize {
             get => _pagesize;
             set => _pagesize=(value > maxPageSize) ? maxPageSize: value; 
-        } 
+        }
+
+        public string OrderBy { get; set; } = "Name";
     }
 }
