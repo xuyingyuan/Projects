@@ -88,7 +88,8 @@ namespace CourseLibrary.API
                 };
             });
 
-            services.AddScoped<IPropertyMappingService, PropertyMappingService>();
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+            services.AddTransient<IPropertyCheckingService, PropertyCheckingService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
