@@ -15,6 +15,7 @@ namespace CourseLibrary.API.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             // seed the database with dummy data
             modelBuilder.Entity<Author>().HasData(
                 new Author()
