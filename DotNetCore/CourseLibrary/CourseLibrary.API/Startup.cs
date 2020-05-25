@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CourseLibrary.API.DbContexts;
 using CourseLibrary.API.Services;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -32,10 +33,19 @@ namespace CourseLibrary.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpCacheHeaders((ExpirationModelOptions)=> {
+                ExpirationModelOptions.MaxAge = 60;
+                ExpirationModelOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Private;
+            },
+            (ValidationModelOptions)=> { ValidationModelOptions.MustRevalidate = true; });
+
+            services.AddResponseCaching();  
             //services.AddControllers();
             services.AddControllers(setupAction=>
             {
-                setupAction.ReturnHttpNotAcceptable = true;                
+                setupAction.ReturnHttpNotAcceptable = true;
+                setupAction.CacheProfiles.Add("240secondsCacheProfile", new CacheProfile() { Duration = 240 });
+                
             })
             .AddNewtonsoftJson(setupAction =>
             {
@@ -131,6 +141,11 @@ namespace CourseLibrary.API
                                     });
                 });
             }
+
+        //    app.UseResponseCaching();
+            
+            app.UseHttpCacheHeaders();  //marvin.cache.header component - this should add before UserRouting and after ResponseCaching
+
             app.UseRouting();
 
             app.UseAuthorization();
