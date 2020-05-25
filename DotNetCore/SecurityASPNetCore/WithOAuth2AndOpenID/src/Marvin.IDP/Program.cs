@@ -9,7 +9,7 @@ using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using System;
 
-namespace Marwin.IDP
+namespace Marvin.IDP
 {
     public class Program
     {

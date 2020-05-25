@@ -5,14 +5,15 @@
 using IdentityServer4.Models;
 using System.Collections.Generic;
 
-namespace Marwin.IDP
+namespace Marvin.IDP
 {
     public static class Config
     {
         public static IEnumerable<IdentityResource> Ids =>
             new IdentityResource[]
             { 
-                new IdentityResources.OpenId()
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile()
             };
 
         public static IEnumerable<ApiResource> Apis =>
