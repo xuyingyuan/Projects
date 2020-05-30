@@ -1,8 +1,15 @@
-﻿using ImageGallery.Client.ViewModels;
+﻿using IdentityModel.Client;
+using ImageGallery.Client.ViewModels;
 using ImageGallery.Model;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -11,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace ImageGallery.Client.Controllers
 { 
+    [Authorize]
     public class GalleryController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -23,6 +31,8 @@ namespace ImageGallery.Client.Controllers
 
         public async Task<IActionResult> Index()
         {
+            await WriteOutIdentityInformation();
+
             var httpClient = _httpClientFactory.CreateClient("APIClient");
 
             var request = new HttpRequestMessage(
@@ -172,5 +182,53 @@ namespace ImageGallery.Client.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public async Task Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);     //this will logout from IDP
+
+        }
+
+        [Authorize(Roles = "PayingUser, abc, dce")]
+        public async Task<IActionResult> OrderFrame()
+        {
+            var idpClient = _httpClientFactory.CreateClient("IDPClient");
+            var metaDtaResponse = await idpClient.GetDiscoveryDocumentAsync();
+            if (metaDtaResponse.IsError)
+            {
+                throw new Exception("Problem accessing the discovery endpoint.", metaDtaResponse.Exception);
+            }
+
+            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+
+            var userinfoResponse = await idpClient.GetUserInfoAsync(new UserInfoRequest
+            {
+                Address = metaDtaResponse.UserInfoEndpoint,
+                Token = accessToken
+            });
+
+            if (userinfoResponse.IsError)
+            {
+                throw new Exception("problem accessing the userInfo endpoint.", userinfoResponse.Exception);
+            }
+
+            var address = userinfoResponse.Claims.FirstOrDefault(c => c.Type == "address")?.Value;
+            return View(new OrderFrameViewModel(address));
+
+
+        }
+        public async Task WriteOutIdentityInformation()
+        {
+            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+
+            Debug.WriteLine($"identity token: {identityToken}");
+
+            foreach(var claim in User.Claims)
+            {
+                Debug.WriteLine($"claim type: {claim.Type} - claim value: {claim.Value}");
+            }
+        }
+
     }
 }
