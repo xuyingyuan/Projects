@@ -51,7 +51,9 @@ namespace Marvin.IDP
                      new Claim("given_name", "Frank"),
                      new Claim("family_name", "Underwood"),
                      new Claim("address", "111 big street winnipeg, MB"),
-                     new Claim("role", "FreeUser")
+                     new Claim("role", "FreeUser"),
+                     new Claim("country", "nl"),
+                     new Claim("subscriptionlevel", "FreeUser")
                  }
              },
              new TestUser
@@ -65,7 +67,9 @@ namespace Marvin.IDP
                      new Claim("given_name", "Claire"),
                      new Claim("family_name", "Underwood"),
                      new Claim("address", "122 big street winnipeg, MB"),
-                     new Claim("role", "PayingUser")
+                     new Claim("role", "PayingUser"),
+                      new Claim("country", "be"),
+                     new Claim("subscriptionlevel", "PayingUser")
                  }
              }
          };

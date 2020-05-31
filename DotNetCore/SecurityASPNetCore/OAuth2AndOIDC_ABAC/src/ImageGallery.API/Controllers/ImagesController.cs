@@ -48,6 +48,7 @@ namespace ImageGallery.API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetImage")]
+        [Authorize(Policy ="MustOwnImage")]
         public IActionResult GetImage(Guid id)
         {          
             var imageFromRepo = _galleryRepository.GetImage(id);

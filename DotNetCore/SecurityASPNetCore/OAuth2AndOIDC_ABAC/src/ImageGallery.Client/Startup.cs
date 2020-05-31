@@ -33,6 +33,17 @@ namespace ImageGallery.Client
             services.AddControllersWithViews()
                  .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
 
+            //add policy:
+            services.AddAuthorization(authorizations =>
+            {
+                authorizations.AddPolicy("CanOrderFrame", policybuilder =>
+                {
+                    policybuilder.RequireAuthenticatedUser();
+                    policybuilder.RequireClaim("country", "be", "cn", "ca");
+                    policybuilder.RequireClaim("subscriptionlevel", "PayingUser");
+                });
+            });
+
             services.AddHttpContextAccessor();
             services.AddTransient<BearerTokenHandler>();
 
@@ -74,6 +85,8 @@ namespace ImageGallery.Client
             options.Scope.Add("address");
             options.Scope.Add("roles");
             options.Scope.Add("imagegalleryapi");
+              options.Scope.Add("country");
+              options.Scope.Add("subscriptionlevel");
             //for claim: 
             //options.ClaimActions.Remove("nbf");
             //options.ClaimActions.DeleteClaim("address");
@@ -82,8 +95,10 @@ namespace ImageGallery.Client
             options.ClaimActions.DeleteClaim("s_hash");
             options.ClaimActions.DeleteClaim("auth_time");
             options.ClaimActions.MapUniqueJsonKey("role", "role");
+              options.ClaimActions.MapUniqueJsonKey("country", "country");
+              options.ClaimActions.MapUniqueJsonKey("subscriptionlevel", "subscriptionlevel");
 
-            options.SaveTokens = true;
+              options.SaveTokens = true;
             options.ClientSecret = "secret";
             options.GetClaimsFromUserInfoEndpoint = true;
               options.TokenValidationParameters = new TokenValidationParameters

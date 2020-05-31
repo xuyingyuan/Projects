@@ -16,7 +16,16 @@ namespace Marvin.IDP
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 new IdentityResources.Address(),
-                new IdentityResource("roles", "your role(s)", new List<string>(){"role"}) //scop, displayname, list of value of return
+                new IdentityResource("roles", "your role(s)", new List<string>(){"role"}), //scop, displayname, list of value of return
+
+                //use ABAC --------------------------
+                new IdentityResource("country",
+                    "The Country you are living in",
+                    new List<string>(){"country"}),
+                new IdentityResource("subscriptionlevel"
+                    , "Your subscription level",
+                    new List<string>(){"subscriptionlevel"}                    
+                    )
             };
 
         public static IEnumerable<ApiResource> Apis =>
@@ -49,7 +58,9 @@ namespace Marvin.IDP
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Address,
                         "roles",
-                        "imagegalleryapi"
+                        "imagegalleryapi",
+                        "country",
+                        "subscriptionlevel"
                     },
                     ClientSecrets =
                     {
