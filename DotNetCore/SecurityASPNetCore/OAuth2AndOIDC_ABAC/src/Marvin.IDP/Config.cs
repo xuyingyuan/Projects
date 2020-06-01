@@ -40,6 +40,19 @@ namespace Marvin.IDP
             {
                 new Client
                 {
+                    //here are 3 setup token life time
+                    //IdentityTokenLifetime=3000, // defautl is 5 min.
+                    //AuthorizationCodeLifetime = 3000, //default is 5 min
+                    //AccessTokenLifetime = 60000, //default is 1 hour
+                    AccessTokenLifetime = 120,
+                    //set up re-fresh token
+                    AllowOfflineAccess = true,
+                    //AbsoluteRefreshTokenLifetime=60000, //defaut is 30 days
+                    //RefreshTokenExpiration = TokenExpiration.Sliding,
+                    //SlidingRefreshTokenLifetime =  ???
+                    UpdateAccessTokenClaimsOnRefresh = true, //get updated if claim changes
+
+
                     ClientName = "Image Gallary",
                     ClientId="ImageGallaryClient1",
                     AllowedGrantTypes=GrantTypes.Code,

@@ -87,6 +87,7 @@ namespace ImageGallery.Client
             options.Scope.Add("imagegalleryapi");
               options.Scope.Add("country");
               options.Scope.Add("subscriptionlevel");
+              options.Scope.Add("offline_access");
             //for claim: 
             //options.ClaimActions.Remove("nbf");
             //options.ClaimActions.DeleteClaim("address");
