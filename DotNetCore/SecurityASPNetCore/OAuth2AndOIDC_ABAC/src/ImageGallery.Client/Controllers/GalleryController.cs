@@ -203,9 +203,43 @@ namespace ImageGallery.Client.Controllers
 
         public async Task Logout()
         {
+            //Revoke token
+            var client = _httpClientFactory.CreateClient("IDPClient");
+            var discoveryDocumentResponse = await client.GetDiscoveryDocumentAsync();
+            if (discoveryDocumentResponse.IsError)
+            {
+                throw new Exception(discoveryDocumentResponse.Error);
+            }
+
+            var accessTokenRevocationResponse = await client.RevokeTokenAsync(
+                new TokenRevocationRequest
+                {
+                    Address = discoveryDocumentResponse.RevocationEndpoint,
+                    ClientId = "ImageGallaryClient1",
+                    ClientSecret = "secret",
+                    Token = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken)
+                });
+
+            if (accessTokenRevocationResponse.IsError)
+            {
+                throw new Exception(accessTokenRevocationResponse.Error);
+            }
+
+           var refreshTokenRevocationResponse = await client.RevokeTokenAsync(
+                new TokenRevocationRequest
+                {
+                    Address = discoveryDocumentResponse.RevocationEndpoint,
+                    ClientId = "ImageGallaryClient1",
+                    ClientSecret = "secret",
+                    Token = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken)
+                });
+            if (refreshTokenRevocationResponse.IsError)
+            {
+                throw new Exception(refreshTokenRevocationResponse.Error);
+            }
+
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);     //this will logout from IDP
-
         }
 
         //[Authorize(Roles = "PayingUser, abc, dce")]
