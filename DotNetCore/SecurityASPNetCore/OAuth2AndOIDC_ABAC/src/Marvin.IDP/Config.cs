@@ -32,7 +32,10 @@ namespace Marvin.IDP
             new ApiResource[]
             {
                new ApiResource("imagegalleryapi", "Image Gallery API",
-                   new List<string>(){"role"})          
+                   new List<string>(){"role"})
+               {
+                   ApiSecrets = {new Secret("apisecret".Sha256())}
+               }       
             };
         
         public static IEnumerable<Client> Clients =>
@@ -40,6 +43,8 @@ namespace Marvin.IDP
             {
                 new Client
                 {
+                    AccessTokenType = AccessTokenType.Reference,
+
                     //here are 3 setup token life time
                     //IdentityTokenLifetime=3000, // defautl is 5 min.
                     //AuthorizationCodeLifetime = 3000, //default is 5 min
