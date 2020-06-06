@@ -11,6 +11,7 @@
 
 @section SideNav {
     @Html.Partial("LeftNav")
+    @await Component.InvokeAsync("MortgageRates")
 }
 
 <p>After you complete this form you should receive an email with your quote shortly after. Please allow up to 1 hour to receive your quote.</p>
