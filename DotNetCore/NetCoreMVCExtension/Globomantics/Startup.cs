@@ -37,6 +37,9 @@ namespace Globomantics
             services.AddScoped<IQuoteService, QuoteService>();
             services.AddScoped<IFeatureService, FeatureService>();
             services.AddScoped<IRateService, RateService>();
+
+            services.Configure<IConfiguration>(Configuration);
+
             services.Configure<RazorViewEngineOptions>(options => options.ViewLocationExpanders.Add(new ThemeExpander()));
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
