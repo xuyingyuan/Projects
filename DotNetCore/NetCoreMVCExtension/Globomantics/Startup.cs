@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Globomantics.Binders;
+using Globomantics.Constraints;
 using Globomantics.Filter;
 using Globomantics.Services;
 using Globomantics.Theme;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -41,6 +43,10 @@ namespace Globomantics
             services.Configure<IConfiguration>(Configuration);
 
             services.Configure<RazorViewEngineOptions>(options => options.ViewLocationExpanders.Add(new ThemeExpander()));
+            services.Configure<RouteOptions>(options => {
+                options.ConstraintMap.Add("tokenCheck", typeof(TokenConstraint));
+                options.ConstraintMap.Add("versionCheck", typeof(VersionConstraint));                
+                });
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
