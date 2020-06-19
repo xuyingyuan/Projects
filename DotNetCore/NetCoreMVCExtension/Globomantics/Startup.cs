@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Globomantics.Binders;
 using Globomantics.Filter;
 using Globomantics.Services;
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +28,7 @@ namespace Globomantics
         {
             services.AddMvc(options=> {
                 options.Filters.Add(typeof(ModelValidationFilter));
+                options.ModelBinderProviders.Insert(0, new SurveyBinderProvider());
 
             });
 

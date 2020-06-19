@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Globomantics.Core.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace Globomantics.Models
         // Person info
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        [AgeValidator(Age =18, ErrorMessage ="you must over 18 years old.")]
         public string Dob { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
