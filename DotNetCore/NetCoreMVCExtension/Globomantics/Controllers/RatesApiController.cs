@@ -7,34 +7,39 @@ using Microsoft.AspNetCore.Mvc;
 using Globomantics.Models;
 using Globomantics.Services;
 using Globomantics.Filter;
+using Globomantics.Conventions;
+using Globomantics.Middleware;
 
 namespace Globomantics.Controllers
 {
-  
+    [MiddlewareFilter(typeof(BasicAuthConfig))]
+    [ControllerVersion(Version =1)]
     [RateExceptionFilter]
-    public class RatesController : Controller
+    [Route("api/rates/")]
+    public class RatesApiV2Controller : Controller
     {
         private IRateService rateService;
 
-        public RatesController(IRateService rateService)
+        public RatesApiV2Controller(IRateService rateService)
         {
             this.rateService = rateService;
         }
 
         [HttpGet]
-        [Route("api/rates/mortgage")]
-        [Route("api/{version:versionCheck(1)}/rates/mortgage")]
+        //[Route("api/[controller]/mortgage")]
+        //[Route("api/{version:versionCheck(1)}/[controller]/mortgage")]
+        [Route("mortgage")]
         public IActionResult GetMortgageRates()
         {
             return Ok(rateService.GetMortgageRates());
         }
 
-        [HttpGet]
-        [Route("api/{version:versionCheck(2)}/rates/mortgage")]
-        public IActionResult GetMortgageRatesV2()
-        {
-            return Ok(rateService.GetMortgageRateDetails());
-        }
+        //[HttpGet]
+        //[Route("api/{version:versionCheck(2)}/rates/mortgage")]
+        //public IActionResult GetMortgageRatesV2()
+        //{
+        //    return Ok(rateService.GetMortgageRateDetails());
+        //}
 
         [HttpGet]
         [Route("autoloan")]

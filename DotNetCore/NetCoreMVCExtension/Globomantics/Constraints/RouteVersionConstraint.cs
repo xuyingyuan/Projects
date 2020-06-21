@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Globomantics.Constraints
 {
-    public class VersionConstraint : IRouteConstraint
+    public class RouteVersionConstraint : IRouteConstraint
     {
         private double _requiredVersion; 
-        public VersionConstraint(double version)
+        public RouteVersionConstraint(double version)
         {
             _requiredVersion = version;
         }
