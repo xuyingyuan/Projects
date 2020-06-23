@@ -1,9 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Game = void 0;
+var utility_1 = require("./utility");
+var scoreboard_1 = require("./scoreboard");
 var Game = (function () {
     function Game(player, problemCount, factor) {
         this.player = player;
         this.problemCount = problemCount;
         this.factor = factor;
-        this.scoreboard = new Scoreboard();
+        this.scoreboard = new scoreboard_1.Scoreboard();
     }
     Game.prototype.displayGame = function () {
         var gameForm = '';
@@ -22,7 +27,7 @@ var Game = (function () {
     Game.prototype.calculateScore = function () {
         var score = 0;
         for (var i = 1; i <= this.problemCount; i++) {
-            var answer = Number(Utility.getInputValue('answer' + i));
+            var answer = Number(utility_1.getValue('answer' + i));
             if (i * this.factor === answer) {
                 score++;
             }
@@ -39,4 +44,5 @@ var Game = (function () {
     };
     return Game;
 }());
+exports.Game = Game;
 //# sourceMappingURL=game.js.map

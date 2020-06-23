@@ -1,9 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Scoreboard = void 0;
+var _ = require("lodash");
 var Scoreboard = (function () {
     function Scoreboard() {
         this.results = [];
     }
     Scoreboard.prototype.addResult = function (newResult) {
         this.results.push(newResult);
+        var allCapsName = _.upperCase(newResult.playerName);
+        console.log(allCapsName + ": " + newResult.score);
     };
     Scoreboard.prototype.updateScoreboard = function () {
         var output = '<h2>Scoreboard</h2>';
@@ -18,4 +24,5 @@ var Scoreboard = (function () {
     };
     return Scoreboard;
 }());
+exports.Scoreboard = Scoreboard;
 //# sourceMappingURL=scoreboard.js.map
