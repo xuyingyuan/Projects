@@ -42,6 +42,7 @@ namespace Basic.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult authenticate()
         {
             var gradmaClaims = new List<Claim>() {
