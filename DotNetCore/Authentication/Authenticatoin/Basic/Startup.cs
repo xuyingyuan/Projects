@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Basic.AuthorizationRequirements;
+using Basic.Transformer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,7 +61,8 @@ namespace Basic
             });
 
             services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
-
+            services.AddScoped<IAuthorizationHandler, CookieJarAuthorizationHandler>();
+            services.AddScoped<IClaimsTransformation, ClaimTransformation>();
 
             services.AddControllersWithViews();
             //add globle authorization filters
