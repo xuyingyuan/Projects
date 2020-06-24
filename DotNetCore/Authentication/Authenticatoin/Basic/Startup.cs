@@ -14,6 +14,9 @@ namespace Basic
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+
+        //https://www.youtube.com/watch?v=Vj7iCb7wDs0&list=PLOeFnOV9YBa7dnrjpOG6lMpcyd7Wn7E8V&index=3
+
         public void ConfigureServices(IServiceCollection services)
         {
 
