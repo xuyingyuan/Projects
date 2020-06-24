@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Basic.CustomAttributes;
+using Basic.CustomerPolicyProvider;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,13 +37,23 @@ namespace Basic.Controllers
             return View();
         }
 
-
         [Authorize(Roles =  "Admin")]
         public IActionResult AdminRole()
         {
             return View();
         }
 
+        [SecurityLevel(7)]
+        public IActionResult SecurityLevel()
+        {
+            return View();
+        }
+
+        [SecurityLevel(10)]
+        public IActionResult SecurityHighLevel()
+        {
+            return View();
+        }
         [AllowAnonymous]
         public IActionResult authenticate()
         {
@@ -50,6 +62,7 @@ namespace Basic.Controllers
                 new Claim(ClaimTypes.Email, "xyz@email.com"),
                  new Claim(ClaimTypes.DateOfBirth, "01/01/1989"),
                  new Claim(ClaimTypes.Role, "Admin"),
+                 new Claim(DynamicPolicies.SecurityLevel, "7"),
                 new Claim("Grandma.Says", "very nice")
             };
 
