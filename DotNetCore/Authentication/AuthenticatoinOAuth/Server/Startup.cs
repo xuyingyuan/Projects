@@ -47,7 +47,8 @@ namespace Server
 
 
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddRazorRuntimeCompilation();
            
         }
 
