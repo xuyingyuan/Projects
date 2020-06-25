@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Home page</h1>
+
+@inject IAuthorizationService authorizationService
+@{ 
+    var result = await authorizationService.AuthorizeAsync(User, "Claim.DoB");
+    if (result.Succeeded)
+    {
+        <h1>user has Dob Claim</h1>
+    }
+}
