@@ -38,8 +38,10 @@ namespace Basic.Controllers
         {
             var Claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, "some_userId"), //user id
-                new Claim("granny", "cookie")
+                new Claim(JwtRegisteredClaimNames.Sub,"some_userId"), //user id
+                new Claim("granny","cookie"),
+                new Claim(JwtRegisteredClaimNames.Birthdate, "11/24/1985"),
+                new Claim("ProductEditor", "true")
             };
             var secretByte = Encoding.UTF8.GetBytes(JwtTokenConstants.Secret);
             var key = new SymmetricSecurityKey(secretByte);
@@ -51,7 +53,7 @@ namespace Basic.Controllers
                 JwtTokenConstants.Audiance,
                 Claims,
                 notBefore:DateTime.Now,
-                expires:DateTime.Now.AddMinutes(10),
+                expires:DateTime.Now.AddHours(2),
                 signingCredentials
                 ); //c# way to representing token
 

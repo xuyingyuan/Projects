@@ -52,7 +52,9 @@ namespace Server.Controllers
             var Claims = new[]
           {
                 new Claim(JwtRegisteredClaimNames.Sub, "some_userId"), //user id
-                new Claim("granny", "cookie")
+                
+                new Claim(JwtRegisteredClaimNames.Birthdate, "11/24/1985"),
+               
             };
             var secretByte = Encoding.UTF8.GetBytes(JwtTokenConstants.Secret);
             var key = new SymmetricSecurityKey(secretByte);
@@ -81,6 +83,16 @@ namespace Server.Controllers
             await Response.Body.WriteAsync(responseByte, 0, responseByte.Length);
             return Redirect(redirect_uri);
 
+        }
+        [Authorize]
+        public IActionResult Validate()
+        {
+            if(HttpContext.Request.Query.TryGetValue("access_token", out var accessToken))
+            {
+                var token = accessToken;
+                return Ok();
+            }
+            return BadRequest();
         }
     }
 }
