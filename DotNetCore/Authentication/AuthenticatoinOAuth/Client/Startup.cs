@@ -44,16 +44,18 @@ namespace Client
                         {
                             var accessToken = context.AccessToken;
                             var base64playload = accessToken.Split('.')[1];
-                            
-                                //var bytes = Convert.FromBase64String(base64playload);
-                                //var jsonPlayload = Encoding.UTF8.GetString(bytes);
-                                //var claims = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonPlayload);
-                                ////IEnumerable<Claim> claims = context.identity.Claims;
-                                //foreach (var claim in claims)
-                                //{
-                                //    context.Identity.AddClaim(new Claim(claim.Key, claim.Value));
-                                //}
-                   
+                            var base64Check = base64playload.Length % 4;
+                            if (base64Check != 0)                           
+                                base64playload = base64playload + ("====").Substring(base64Check);
+                            var bytes = Convert.FromBase64String(base64playload);
+                            var jsonPlayload = Encoding.UTF8.GetString(bytes);
+                            var claims = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonPlayload);
+                            //IEnumerable<Claim> claims = context.identity.Claims;
+                            foreach (var claim in claims)
+                            {
+                                context.Identity.AddClaim(new Claim(claim.Key, claim.Value));
+                            }
+
                             return Task.CompletedTask;
                         }
                     };

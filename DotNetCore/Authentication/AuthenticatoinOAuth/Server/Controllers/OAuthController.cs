@@ -47,7 +47,8 @@ namespace Server.Controllers
             string grant_type,
             string code,    //comfirmaiton of the authentication
             string redirect_uri,
-            string client_id )
+            string client_id,
+            string refresh_token)
         {
             var Claims = new[]
           {
@@ -66,7 +67,7 @@ namespace Server.Controllers
                 JwtTokenConstants.Audiance,
                 Claims,
                 notBefore: DateTime.Now,
-                expires: DateTime.Now.AddMinutes(10),
+                expires: grant_type=="refresh_token"? DateTime.Now.AddMilliseconds(5): DateTime.Now.AddMilliseconds(1),
                 signingCredentials
                 ); //c# way to representing token
 
@@ -75,7 +76,8 @@ namespace Server.Controllers
             {
                 access_token,
                 token_type = "Bearer",
-                raw_claim = "auathTest"
+                raw_claim = "auathTest",
+                refresh_token = "refereshTokenSampleValueorSomething123456"
             };
 
             var responseJson = JsonConvert.SerializeObject(responseObject);
