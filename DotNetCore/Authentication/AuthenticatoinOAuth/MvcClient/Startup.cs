@@ -2,33 +2,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityServer.Statics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace IdentityServer
+namespace MvcClient
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-
-        //check this when start runing: https://localhost:44337/.well-known/openid-configuration
-        //not works for identityServer4 4.0.0 - accessToken is null -- why????
+        //openid doc url: https://openid.net/specs/openid-connect-core-1_0.html#Authentication
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(config=> {
+                config.DefaultScheme = "SueMVCCookie";
+                config.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("SueMVCCookie")
+                .AddOpenIdConnect("oidc", config=> {
+                    config.Authority = "https://localhost:44337/";    //sever url
+                    config.ClientId = "client_id_mvc";
+                    config.ClientSecret = "client_secret_mvc";
+                    config.SaveTokens = true;
 
-            services.AddIdentityServer()
-                .AddInMemoryApiResources(Configuration.GetApis())
-                .AddInMemoryIdentityResources(Configuration.GetIdentityResource())
-                .AddInMemoryClients(Configuration.GetClients())
-                .AddDeveloperSigningCredential();   //generate developer certificate key: tempkey.jwk
+                    config.ResponseType = "code";
+                 
+
+                   
+                });
 
             services.AddControllersWithViews();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,8 +45,8 @@ namespace IdentityServer
 
             app.UseRouting();
 
-            app.UseIdentityServer();
-            
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
