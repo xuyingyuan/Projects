@@ -43,7 +43,10 @@ namespace IdentityServer.Statics
                 AllowedScopes = {"ApiOne", "ApiTwo", 
                          IdentityServerConstants.StandardScopes.OpenId,
                      IdentityServerConstants.StandardScopes.Profile},
-               }
+
+                RequireConsent = false //do not show consent page for this client
+               },
+               
             };
 
 

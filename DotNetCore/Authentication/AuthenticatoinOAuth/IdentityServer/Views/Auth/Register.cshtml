@@ -1,0 +1,20 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = "Rigster";
+}
+
+<h1>Rigster</h1>
+<form asp-controller="Auth" asp-action="Register" method="post">
+    <input type="hidden" asp-for="ReturnRul" />
+    <div>
+        <label>user name: </label><input type="text" name="UserName" value="" />
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div><label>password: </label><input type="text" name="Password" value="" /> <span asp-validation-for="Password"></span></div>
+    <div><label>password: </label><input type="text" name="ConfirmPassword" value="" /> <span asp-validation-for="ConfirmPassword"></span></div>
+    <div><button type="submit">Sign up</button></div>
+</form>
+
+<div><a asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@Model.ReturnRul"> Register </a></div>
+
+

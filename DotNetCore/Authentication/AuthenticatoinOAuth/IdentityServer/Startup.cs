@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer.Data;
 using IdentityServer.Statics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -21,11 +24,39 @@ namespace IdentityServer
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddDbContext<AppDBContext>(config => {
+                config.UseInMemoryDatabase("memory");
+            });
+
+            //AddIdentity registers the services
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                config.Password.RequiredLength = 4;
+                config.Password.RequireDigit = false;
+                config.Password.RequireNonAlphanumeric = false;
+                config.Password.RequireUppercase = false;
+                //config.SignIn.RequireConfirmedEmail = true;
+            })
+                .AddEntityFrameworkStores<AppDBContext>()
+                .AddDefaultTokenProviders();    //token in url
+
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "IdentityServer.cookie";
+                config.LoginPath = "/Auth/Login";
+            });
+
+
             services.AddIdentityServer()
+                .AddAspNetIdentity<IdentityUser>()
                 .AddInMemoryApiResources(Configuration.GetApis())
                 .AddInMemoryIdentityResources(Configuration.GetIdentityResource())
                 .AddInMemoryClients(Configuration.GetClients())
                 .AddDeveloperSigningCredential();   //generate developer certificate key: tempkey.jwk
+
+
+
 
             services.AddControllersWithViews();
 
