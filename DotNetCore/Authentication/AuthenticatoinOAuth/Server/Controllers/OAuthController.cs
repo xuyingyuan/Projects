@@ -67,7 +67,7 @@ namespace Server.Controllers
                 JwtTokenConstants.Audiance,
                 Claims,
                 notBefore: DateTime.Now,
-                expires: grant_type=="refresh_token"? DateTime.Now.AddMilliseconds(5): DateTime.Now.AddMilliseconds(1),
+                expires: grant_type=="refresh_token"? DateTime.Now.AddSeconds(60): DateTime.Now.AddMilliseconds(1),
                 signingCredentials
                 ); //c# way to representing token
 

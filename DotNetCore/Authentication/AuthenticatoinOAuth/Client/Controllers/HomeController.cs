@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,30 +31,35 @@ namespace Basic.Controllers
         [Authorize]
         public async Task< IActionResult> Secret()
         {
-
-            var serverClient = _httpClientFactory.CreateClient();          
-            var token = await HttpContext.GetTokenAsync("access_token");
-            serverClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
-            var serverurl = "https://localhost:44302/secret/index";      
-            var srverResponse = await serverClient.GetAsync(serverurl);
-            var refreshTokenResult = await RefreshAccessToken();
-
-            //======after refresh token ===========================
-            token = await HttpContext.GetTokenAsync("access_token");
-            var apiClient = _httpClientFactory.CreateClient();
-            apiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            var serverurl = "https://localhost:44302/secret/index";
             var apiuri = "https://localhost:44388/secret/index";
-            var apiResponse = await apiClient.GetAsync(apiuri);
+            var serverResponse = await AccessTokenRefreshWrapper(() => SecureGetRequest(serverurl));
+            var apiResponse = await AccessTokenRefreshWrapper(() => SecureGetRequest(apiuri));
+
             return View();
         }
 
-
+       private async Task<HttpResponseMessage> SecureGetRequest(string requestUrl)
+        {          
+            var token = await HttpContext.GetTokenAsync("access_token");
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");           
+            return  await client.GetAsync(requestUrl);
+        }
        
-  
-        public IActionResult authenticate()
+        public async Task<HttpResponseMessage> AccessTokenRefreshWrapper(Func<Task<HttpResponseMessage>> initialRequestAction)
         {
-          
+            var response = await initialRequestAction();
+            if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                await RefreshAccessToken();
+                response = await initialRequestAction();
+            }
+            return response;            
+        }
+
+        public IActionResult authenticate()
+        {         
 
             return Ok(); //check token on jwt.io
 
@@ -66,7 +73,6 @@ namespace Basic.Controllers
 
        public async Task<string> RefreshAccessToken()
         {
-            
             var refreshToken = await HttpContext.GetTokenAsync("refresh_token");
             var refreshTokenClient = _httpClientFactory.CreateClient();
             
@@ -89,6 +95,7 @@ namespace Basic.Controllers
             request.Headers.Add("Authorization", $"Basic {base64Credentials}");
 
             var response = await refreshTokenClient.SendAsync(request);
+
             var responseString = await response.Content.ReadAsStringAsync();
             var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseString);
 

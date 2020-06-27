@@ -39,7 +39,7 @@ namespace Server
 
                 config.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    //ClockSkew = TimeSpan.Zero,      //override default expired time as 5 min.
+                    ClockSkew = TimeSpan.Zero,      //override default expired time as 5 min.
                     ValidIssuer = JwtTokenConstants.Issuer,
                     ValidAudience = JwtTokenConstants.Audiance,
                     IssuerSigningKey = key
