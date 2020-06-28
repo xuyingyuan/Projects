@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,11 +28,26 @@ namespace MvcClient
                     config.SaveTokens = true;
 
                     config.ResponseType = "code";
-                 
 
+                    //configure cookie claim mapping, or delete some claims
+                    config.ClaimActions.DeleteClaim("mar");
+                    config.ClaimActions.DeleteClaim("s_hash");
+                    config.ClaimActions.MapUniqueJsonKey("mappedSueClaimOne", "sue.claimOne");
+
+
+                    //tow trips to load claims into the cookie, so keep the id token smaller
+                    config.GetClaimsFromUserInfoEndpoint = true;        //get user claim
+
+                    //config scope
+                    config.Scope.Clear();
+                    config.Scope.Add("openid");
+                    config.Scope.Add("SueClaim.scope");
+                    config.Scope.Add("ApiOne");
+                    config.Scope.Add("ApiTwo");
                    
                 });
 
+            services.AddHttpClient();
             services.AddControllersWithViews();
         }
 

@@ -9,10 +9,14 @@ namespace ApiOne.Contollers
 {
     public class SecretController: Controller
     {
+
+     
+
         [Authorize]
         [Route("/Secret")]
         public string Index()
         {
+            var claims = User.Claims.ToList();
             return "secret message from ApiOne";
         }
     }

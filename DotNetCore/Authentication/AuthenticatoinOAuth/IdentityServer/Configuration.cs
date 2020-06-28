@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace IdentityServer.Statics
 {
@@ -14,16 +15,26 @@ namespace IdentityServer.Statics
             new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile()
+                new IdentityResources.Profile(),
 
-
+                //add claims here
+                new IdentityResource
+                {
+                   Name = "SueClaim.scope",
+                   UserClaims =
+                    {
+                        "sue.claimOne"
+                      
+                    }
+                }
             };
 
         public static IEnumerable<ApiResource> GetApis() =>           
                 new List<ApiResource>
                 {
-                    new ApiResource("ApiOne"),
-                    new ApiResource("ApiTwo")
+                    //Note: the claims set up here is actually shared by both ApiOne and ApiTwo resources if client have both resource in scope
+                    new ApiResource("ApiOne", new string[]{"sue.api.claimOne" }),
+                    new ApiResource("ApiTwo", new string[]{"sue.api.claimTwo" })    
                 };
 
         public static IEnumerable<Client> GetClients() =>
@@ -42,9 +53,14 @@ namespace IdentityServer.Statics
                 RedirectUris = { "https://localhost:44382/signin-oidc" },
                 AllowedScopes = {"ApiOne", "ApiTwo", 
                          IdentityServerConstants.StandardScopes.OpenId,
-                     IdentityServerConstants.StandardScopes.Profile},
+                     IdentityServerConstants.StandardScopes.Profile,
+                    "SueClaim.scope"},
+
+
+                //AlwaysIncludeUserClaimsInIdToken = true,    //set to true will put all teh claims in the id Token
 
                 RequireConsent = false //do not show consent page for this client
+
                },
                
             };
