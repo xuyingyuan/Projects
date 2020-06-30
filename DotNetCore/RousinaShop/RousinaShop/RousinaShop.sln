@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RousinaShop", "RousinaShop\RousinaShop.csproj", "{47A3E018-38B6-4792-B335-CC5685A9772D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RousincaShop.Admin", "RousincaShop.Admin\RousincaShop.Admin.csproj", "{8AFFA2EC-88BF-4768-AA54-2EBB0167C67D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47A3E018-38B6-4792-B335-CC5685A9772D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A3E018-38B6-4792-B335-CC5685A9772D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A3E018-38B6-4792-B335-CC5685A9772D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A3E018-38B6-4792-B335-CC5685A9772D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AFFA2EC-88BF-4768-AA54-2EBB0167C67D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AFFA2EC-88BF-4768-AA54-2EBB0167C67D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AFFA2EC-88BF-4768-AA54-2EBB0167C67D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AFFA2EC-88BF-4768-AA54-2EBB0167C67D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {66432DC1-2599-4180-9D5D-C96DE753F3C7}
+	EndGlobalSection
+EndGlobal
