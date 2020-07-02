@@ -1,0 +1,11 @@
+﻿@model IEnumerable<ProductColorDto>
+<h3>Colors</h3>
+<div id="productcolors" class="row">
+    @foreach(var item in Model)
+    {
+        <div class="col-sm-1">
+        <img src="~/images/@item.defaultProductImageDto.ProductImageUrl" alt="@item.ColorId" height="50"/>
+        <br/>@item.ColorDescription 
+        </div>
+    }
+</div>

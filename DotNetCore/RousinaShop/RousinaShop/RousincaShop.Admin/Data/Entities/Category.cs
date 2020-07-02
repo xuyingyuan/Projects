@@ -10,7 +10,7 @@ namespace RousincaShop.Admin.Data.Entities
             SubCategories = new HashSet<SubCategory>();
         }
 
-        public int CategoryId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Created { get; set; }

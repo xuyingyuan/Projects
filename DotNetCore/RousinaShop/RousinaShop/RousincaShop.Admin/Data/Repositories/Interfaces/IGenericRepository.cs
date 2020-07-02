@@ -20,6 +20,6 @@ namespace RousincaShop.Admin.Data.Repositories.Interfaces
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
 
-        bool Save();
+        //bool Save();
     }
 }

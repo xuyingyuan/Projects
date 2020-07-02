@@ -5,7 +5,7 @@ namespace RousincaShop.Admin.Data.Entities
 {
     public partial class Sku
     {
-        public int Skuid { get; set; }
+        public int Id { get; set; }
         public string Upc { get; set; }
         public int ProductId { get; set; }
         public int? FitId { get; set; }

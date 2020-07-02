@@ -5,7 +5,7 @@ namespace RousincaShop.Admin.Data.Entities
 {
     public partial class ProductImage
     {
-        public int ProductImageId { get; set; }
+        public int Id { get; set; }
         public int? ProductId { get; set; }
         public int? FitId { get; set; }
         public int? ColorId { get; set; }

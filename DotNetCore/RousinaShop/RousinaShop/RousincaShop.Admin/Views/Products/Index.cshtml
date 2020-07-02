@@ -24,14 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Created)
             </th>
+           
             <th>
-                @Html.DisplayNameFor(model => model.Modified)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Deleted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SizeScale)
+                @Html.DisplayNameFor(model => model.SizeScaleId)
             </th>
             <th></th>
         </tr>
@@ -50,20 +45,14 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Created)
+            </td>         
+            <td>
+                @Html.DisplayFor(modelItem => item.SizeScaleId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Modified)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SizeScale.SizeScaleId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

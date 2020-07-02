@@ -68,10 +68,10 @@ namespace RousincaShop.Admin.Data.Repositories
         }
 
 
-        public bool Save()
-        {
-            return (_dbContext.SaveChanges() >= 0);
-        }
+        //public bool Save()
+        //{
+        //    return (_dbContext.SaveChanges() >= 0);
+        //}
 
         public void Dispose()
         {

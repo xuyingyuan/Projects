@@ -10,7 +10,7 @@ namespace RousincaShop.Admin.Models
             CategoryItems = new HashSet<CategoryItemDto>();
         }
 
-        public int SubCategoryId { get; set; }
+        public int Id { get; set; }
         public int CategoryId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

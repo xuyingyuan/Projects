@@ -21,6 +21,7 @@ namespace RousincaShop.Admin.Data.Entities
         public virtual DbSet<Fit> Fits { get; set; }
         public virtual DbSet<ImageType> ImageTypes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ProductColor> ProductColors { get; set; }
         public virtual DbSet<ProductImage> ProductImages { get; set; }
         public virtual DbSet<SizeCode> SizeCodes { get; set; }
         public virtual DbSet<SizeScale> SizeScales { get; set; }
@@ -191,6 +192,41 @@ namespace RousincaShop.Admin.Data.Entities
                     .HasConstraintName("FK_Product_SizeScale");
             });
 
+            modelBuilder.Entity<ProductColor>(entity =>
+            {
+                entity.ToTable("ProductColor", "product");
+
+                entity.Property(e => e.ColorDescription)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ColorPriceOverride).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Deleted).HasColumnType("datetime");
+
+                entity.Property(e => e.IsDefaultColor)
+                    .HasColumnName("isDefaultColor")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.ModifyDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Color)
+                    .WithMany(p => p.ProductColors)
+                    .HasForeignKey(d => d.ColorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductColor_Color1");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductColors)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductColor_Product");
+            });
+
             modelBuilder.Entity<ProductImage>(entity =>
             {
                 entity.ToTable("ProductImage", "product");
@@ -262,8 +298,6 @@ namespace RousincaShop.Admin.Data.Entities
             modelBuilder.Entity<Sku>(entity =>
             {
                 entity.ToTable("SKU", "product");
-
-                entity.Property(e => e.Skuid).HasColumnName("SKUId");
 
                 entity.Property(e => e.Created)
                     .HasColumnType("datetime")

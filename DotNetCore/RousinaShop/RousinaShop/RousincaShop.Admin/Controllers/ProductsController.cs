@@ -28,8 +28,8 @@ namespace RousincaShop.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await _productRepository.GetAllAsync();
-            var productDto = _mapper.Map<IEnumerable<ProductDto>>(products);
-            return View(productDto.ToList());
+            var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
+            return View(productDtos.ToList());
         }
 
         // GET: Products/Details/5
@@ -40,13 +40,20 @@ namespace RousincaShop.Admin.Controllers
                 return NotFound();
             }
 
-            var product = await _productRepository.GetAsync(id.Value);
+            //var product = await _productRepository.GetAsync(id.Value);
+            var subset = new string[] { "productimages", "skus" };
+            var product = await _productRepository.GetDetailAsync(id.Value, subset);
+
             if (product == null)
             {
                 return NotFound();
             }
+            var productDto = _mapper.Map<ProductDetailDto>(product);
+            productDto.ProductImagesDtos = _mapper.Map<IEnumerable<ProductImageDto>>(product.ProductImages);
+            productDto.SkusDtos = _mapper.Map<IEnumerable<SkuDto>>(product.Skus);
 
-            return View(product);
+
+            return View(productDto);
         }
 
         // GET: Products/Create

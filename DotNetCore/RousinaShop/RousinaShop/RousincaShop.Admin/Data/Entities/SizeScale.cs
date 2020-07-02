@@ -10,7 +10,7 @@ namespace RousincaShop.Admin.Data.Entities
             Products = new HashSet<Product>();
         }
 
-        public int SizeScaleId { get; set; }
+        public int Id { get; set; }
         public string SizeRange { get; set; }
         public string SizeScale1 { get; set; }
         public DateTime? Created { get; set; }
