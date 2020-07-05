@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RousincaShop.Admin.Data.Repositories.Interfaces;
+using RousincaShop.Admin.Data.Repositories.Wrapper;
 using RousincaShop.Admin.Models;
 using System;
 using System.Collections.Generic;
@@ -10,23 +11,20 @@ namespace RousincaShop.Admin.Service
 {
     public class ProductColorService: IProductColorService
     {
-        private readonly IProductColorRepository _productcolorRepository;
-        private readonly IProductImageRepository _productImageRepository;
+        private readonly IRepositoryWrapper _repositoryWrapper;      
         private readonly IMapper _mapper;
 
-        public ProductColorService(IProductColorRepository productColorRepository,
-            IProductImageRepository productImageRepository,
+        public ProductColorService(IRepositoryWrapper repositoryWrapper,            
             IMapper mapper)
         {
-            _productcolorRepository = productColorRepository;
-            _productImageRepository = productImageRepository;
+            _repositoryWrapper = repositoryWrapper;          
             _mapper = mapper;
         }
 
         public IEnumerable<ProductColorDto> GetProductColorsWithDefaultImages(int productId, int? colorId)
         {
             IEnumerable<ProductColorDto> productColorDtos = null;
-            var productcolors = _productcolorRepository.GetProductcolorbyProductId(productId);
+            var productcolors = _repositoryWrapper.ProductColor.GetProductcolorbyProductId(productId);
 
             if (productcolors.Count() == 0)
                 return null;
@@ -35,7 +33,7 @@ namespace RousincaShop.Admin.Service
             {
                 colorId = productcolors.FirstOrDefault().ColorId;
             }
-            var productimages = _productImageRepository.GetProductDefaultImages(productId);
+            var productimages = _repositoryWrapper.ProductImage.GetProductDefaultImages(productId);
             
             productColorDtos = _mapper.Map<IEnumerable<ProductColorDto>>(productcolors);
             foreach (var c in productColorDtos)
@@ -44,7 +42,7 @@ namespace RousincaShop.Admin.Service
                 var colorImagesDto = GetProductColorImages(productId, c.ColorId);
                 var colorDefaultImageDto = colorImagesDto.FirstOrDefault(i => i.ColorId == c.ColorId);
                 c.defaultProductImageDto = colorDefaultImageDto;
-                c.productImageDtos = colorImagesDto;
+                c.productImageDtos = colorImagesDto.ToList();
             }
 
             return productColorDtos;
@@ -52,7 +50,7 @@ namespace RousincaShop.Admin.Service
 
         public IEnumerable<ProductImageDto> GetProductColorImages(int productId, int colorId)
         {
-            var productcolorImages = _productImageRepository.GetProductImagesbyProductIdAndColorId(productId, colorId);
+            var productcolorImages = _repositoryWrapper.ProductImage.GetProductImagesbyProductIdAndColorId(productId, colorId);
             return (_mapper.Map<IEnumerable<ProductImageDto>>(productcolorImages));
         }
 

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FreshingStore.Core\FreshingStore.Core.csproj" />
+    <ProjectReference Include="..\FreshingStore.Repo\FreshingStore.Repo.csproj" />
+  </ItemGroup>
+
+</Project>

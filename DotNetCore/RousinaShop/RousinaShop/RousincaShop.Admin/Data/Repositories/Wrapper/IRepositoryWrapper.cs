@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RousincaShop.Admin.Data.RepostoryWrap
+namespace RousincaShop.Admin.Data.Repositories.Wrapper
+
 {
     public interface IRepositoryWrapper
     {

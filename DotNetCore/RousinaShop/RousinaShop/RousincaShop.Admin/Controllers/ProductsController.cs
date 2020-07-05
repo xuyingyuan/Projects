@@ -8,18 +8,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RousincaShop.Admin.Data.Entities;
 using RousincaShop.Admin.Data.Repositories.Interfaces;
+using RousincaShop.Admin.Data.Repositories.Wrapper;
 using RousincaShop.Admin.Models;
 
 namespace RousincaShop.Admin.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
 
-        public ProductsController(IProductRepository productRepository, IMapper mapper)
+
+        public ProductsController(IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
-            _productRepository = productRepository;
+            _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
         }
 
@@ -27,7 +29,7 @@ namespace RousincaShop.Admin.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var products = await _productRepository.GetAllAsync();
+            var products = await _repositoryWrapper.Product.GetAllAsync();
             var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
             return View(productDtos.ToList());
         }
@@ -42,7 +44,7 @@ namespace RousincaShop.Admin.Controllers
 
             //var product = await _productRepository.GetAsync(id.Value);
             var subset = new string[] { "productimages", "skus" };
-            var product = await _productRepository.GetDetailAsync(id.Value, subset);
+            var product = await _repositoryWrapper.Product.GetDetailAsync(id.Value, subset);
 
             if (product == null)
             {

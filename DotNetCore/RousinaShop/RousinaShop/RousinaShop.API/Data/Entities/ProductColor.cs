@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace RousincaShop.Admin.Models
+namespace RousinaShop.API.Data.Entities
 {
-    public class ProductColorDto
+    public partial class ProductColor
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
@@ -17,10 +15,7 @@ namespace RousincaShop.Admin.Models
         public DateTime? ModifyDate { get; set; }
         public DateTime? Deleted { get; set; }
 
-        public virtual ColorDto Color { get; set; }
-
-        public ProductImageDto defaultProductImageDto { get; set;}
-        public ICollection<ProductImageDto> productImageDtos { get; set; }
-   
+        public virtual Color Color { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

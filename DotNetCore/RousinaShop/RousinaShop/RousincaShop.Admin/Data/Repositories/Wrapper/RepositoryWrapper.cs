@@ -1,6 +1,6 @@
 ﻿using RousincaShop.Admin.Data.Entities;
 using RousincaShop.Admin.Data.Repositories.Interfaces;
-using RousincaShop.Admin.Data.RepostoryWrap;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

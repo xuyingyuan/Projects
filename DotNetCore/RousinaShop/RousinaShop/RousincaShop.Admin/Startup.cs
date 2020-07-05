@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using RousincaShop.Admin.Data.Entities;
 using RousincaShop.Admin.Data.Repositories;
 using RousincaShop.Admin.Data.Repositories.Interfaces;
+using RousincaShop.Admin.Data.Repositories.Wrapper;
+
 using RousincaShop.Admin.Service;
 
 namespace RousincaShop.Admin
@@ -30,15 +32,16 @@ namespace RousincaShop.Admin
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
             services.AddDbContext<RousinaDBContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("RousinaDB")); });
-
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<ILookUpRepository, LookupRepository>();
-            services.AddScoped<IProductColorRepository, ProductColorRepository>();
-            services.AddScoped<IProductImageRepository, ProductImageRepository>();
+
+            //services.AddScoped<IProductRepository, ProductRepository>();
+            //services.AddScoped<ILookUpRepository, LookupRepository>();
+            //services.AddScoped<IProductColorRepository, ProductColorRepository>();
+            //services.AddScoped<IProductImageRepository, ProductImageRepository>();
+
             services.AddScoped<IProductColorService, ProductColorService>();
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

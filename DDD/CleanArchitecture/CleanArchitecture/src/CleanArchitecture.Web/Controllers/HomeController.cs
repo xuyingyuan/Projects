@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Web.Controllers
 {
+    //this is for Onion architecture practice
     public class HomeController : Controller
     {
         private  IRepository _repository;
