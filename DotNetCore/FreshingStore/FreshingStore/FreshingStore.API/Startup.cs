@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FreshingStore.Repo.DataAccess;
+using FreshingStore.Repo.Repository;
+using FreshingStore.Repo.Repository.Interfaces;
 using FreshingStore.Repo.RepositoryWrapper;
 using FreshingStore.Service;
 using FreshingStore.Service.Interface;
@@ -33,7 +35,13 @@ namespace FreshingStore.API
             services.AddControllers();
 
             services.AddDbContext<AppDBContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("FreshDB")); });
+            
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IRepository1<>), typeof(Repository1<>));
+
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
         }
 

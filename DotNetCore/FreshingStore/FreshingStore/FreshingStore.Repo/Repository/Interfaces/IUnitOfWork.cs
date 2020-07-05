@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FreshingStore.Repo.Repository.Interfaces
 {
@@ -9,6 +10,7 @@ namespace FreshingStore.Repo.Repository.Interfaces
     {
         AppDBContext _dbcontext { get; }
         void Commit();
+        Task CommitAsync();
 
     }
    

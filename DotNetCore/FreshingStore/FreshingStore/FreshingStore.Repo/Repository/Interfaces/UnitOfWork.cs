@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FreshingStore.Repo.Repository.Interfaces
 {
@@ -18,6 +19,11 @@ namespace FreshingStore.Repo.Repository.Interfaces
             _dbcontext.SaveChanges();
         }
 
+
+        public async Task CommitAsync()
+        {
+          await _dbcontext.SaveChangesAsync();
+        }
         public void Dispose()
         {
             _dbcontext.Dispose();

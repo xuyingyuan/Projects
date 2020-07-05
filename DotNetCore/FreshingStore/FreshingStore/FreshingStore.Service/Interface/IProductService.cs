@@ -16,5 +16,8 @@ namespace FreshingStore.Service.Interface
         Task  AddProductAsyn(Product product);
         void RemoveProduct(Product product);
 
+        void Commit();
+        Task CommitAsync();
+
     }
 }

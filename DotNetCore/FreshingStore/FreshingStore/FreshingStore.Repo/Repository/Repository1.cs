@@ -11,17 +11,21 @@ using System.Threading.Tasks;
 
 namespace FreshingStore.Repo.Repository
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository1<T> : IRepository1<T> where T : class
     {
-      
+        private  IUnitOfWork _unitOfWork;
 
         protected  AppDBContext _dbContext;
-        public Repository(AppDBContext dbcontext)
-        {
-            _dbContext = dbcontext;
-        }
+        //public Repository(AppDBContext dbcontext)
+        //{
+        //    _dbContext = dbcontext;
+        //}
 
-       
+        public Repository1(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+            _dbContext = _unitOfWork._dbcontext;
+        }
 
         public T Get(int id)
         {
