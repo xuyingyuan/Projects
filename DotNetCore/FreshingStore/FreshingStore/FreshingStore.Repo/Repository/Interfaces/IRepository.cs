@@ -23,8 +23,8 @@ namespace FreshingStore.Repo.Repository.Interfaces
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetAsync(int id);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
-        Task AddAync(T entity);  
-        Task AddRangeAsyn(IEnumerable<T> entities);
+        Task AddAsync(T entity);  
+        Task AddRangeAsync(IEnumerable<T> entities);
         
 
     }

@@ -1,10 +1,11 @@
 ﻿using FreshingStore.Repo.DataAccess;
+using FreshingStore.Repo.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreshingStore.Repo.Repository.Interfaces
+namespace FreshingStore.Repo.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {

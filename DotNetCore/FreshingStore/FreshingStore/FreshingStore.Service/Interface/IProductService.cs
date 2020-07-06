@@ -10,10 +10,11 @@ namespace FreshingStore.Service.Interface
     public interface IProductService
     {
         Product GetProduct(int id);
-        Task<IEnumerable<Product>> GetProductsAsyn();
-        Task<Product> GetProductAsyn(int id);
+        Task<IEnumerable<Product>> GetProductsAsync();
+        Task<Product> GetProductAsync(int id);
         Task<IEnumerable<Product>> FindProductAsyn(Expression<Func<Product, bool>> predicate);
-        Task  AddProductAsyn(Product product);
+        Task  AddProductAsync(Product product);
+        void UpdProduct(Product product);
         void RemoveProduct(Product product);
 
         void Commit();

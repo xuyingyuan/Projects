@@ -13,15 +13,19 @@ namespace FreshingStore.Repo.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-      
+        private  IUnitOfWork _unitOfWork;
 
         protected  AppDBContext _dbContext;
-        public Repository(AppDBContext dbcontext)
-        {
-            _dbContext = dbcontext;
-        }
+        //public Repository(AppDBContext dbcontext)
+        //{
+        //    _dbContext = dbcontext;
+        //}
 
-       
+        public Repository(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+            _dbContext = _unitOfWork._dbcontext;
+        }
 
         public T Get(int id)
         {
@@ -71,7 +75,7 @@ namespace FreshingStore.Repo.Repository
 
       
              
-        public async Task AddAync(T entity)
+        public async Task AddAsync(T entity)
         {
            await _dbContext.Set<T>().AddAsync(entity);
         }
@@ -81,7 +85,7 @@ namespace FreshingStore.Repo.Repository
             return await _dbContext.Set<T>().Where(predicate).ToListAsync();
         }
 
-        public async Task AddRangeAsyn(IEnumerable<T> entities)
+        public async Task AddRangeAsync(IEnumerable<T> entities)
         {
              foreach (T e in entities)
                 await _dbContext.Set<T>().AddRangeAsync(e);
@@ -92,6 +96,9 @@ namespace FreshingStore.Repo.Repository
             _dbContext.Set<T>().Attach(entity);
             _dbContext.Entry(entity).State = EntityState.Modified;
         }
+
+
+      
 
         public void Dispose()
         {

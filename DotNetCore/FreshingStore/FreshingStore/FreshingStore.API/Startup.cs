@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FreshingStore.Logger.Extension;
+using FreshingStore.Logger.Logging;
 using FreshingStore.Repo.DataAccess;
 using FreshingStore.Repo.Repository;
 using FreshingStore.Repo.Repository.Interfaces;
-using FreshingStore.Repo.RepositoryWrapper;
-using FreshingStore.Service;
 using FreshingStore.Service.Interface;
+using FreshingStore.Service.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,17 +28,22 @@ namespace FreshingStore.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(configure => {
+                configure.ReturnHttpNotAcceptable = true;               
+            }).AddXmlDataContractSerializerFormatters();
 
             services.AddDbContext<AppDBContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("FreshDB")); });
-            
-            services.AddScoped<IProductService, ProductService>();
+
+
+            services.AddSingleton<ILoggerManager, LoggerManager>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(IRepository1<>), typeof(Repository1<>));
+         
+            addStoreServices(services);
 
-            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +54,9 @@ namespace FreshingStore.API
                 app.UseDeveloperExceptionPage();
             }
 
+            //app.ConfigureExceptionHandler(logger);
+            app.ConfigureCustomExceptionMiddleware();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -61,8 +65,13 @@ namespace FreshingStore.API
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers(); //attribute-based routing
             });
+        }
+
+        private void  addStoreServices(IServiceCollection services)
+        {
+            services.AddScoped<IProductService, ProductService>();
         }
     }
 }

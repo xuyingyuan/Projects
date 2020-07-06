@@ -208,11 +208,13 @@ namespace RousinaShop.API.Data.Entities
 
                 entity.Property(e => e.Deleted).HasColumnType("datetime");
 
+                entity.Property(e => e.ModifyDate).HasColumnType("datetime");
+
                 entity.Property(e => e.IsDefaultColor)
                     .HasColumnName("isDefaultColor")
                     .HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ModifyDate).HasColumnType("datetime");
+           
 
                 entity.HasOne(d => d.Color)
                     .WithMany(p => p.ProductColors)
