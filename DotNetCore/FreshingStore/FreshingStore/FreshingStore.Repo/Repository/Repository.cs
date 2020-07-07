@@ -16,11 +16,11 @@ namespace FreshingStore.Repo.Repository
         private  IUnitOfWork _unitOfWork;
 
         protected  AppDBContext _dbContext;
+
         //public Repository(AppDBContext dbcontext)
         //{
         //    _dbContext = dbcontext;
         //}
-
         public Repository(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -33,11 +33,11 @@ namespace FreshingStore.Repo.Repository
         }
         public IEnumerable<T> GetAll()
         {
-            return _dbContext.Set<T>().ToList();
+            return _dbContext.Set<T>().AsEnumerable<T>();
         }
         public IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
         {
-            return _dbContext.Set<T>().Where(predicate);
+            return _dbContext.Set<T>().Where(predicate).AsEnumerable<T>();
         }
         public void Add(T entity)
         {
@@ -70,7 +70,7 @@ namespace FreshingStore.Repo.Repository
                
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            return await _dbContext.Set<T>().ToListAsync<T>();
         }
 
       
@@ -98,19 +98,48 @@ namespace FreshingStore.Repo.Repository
         }
 
 
-      
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
-        protected virtual void Dispose(bool disposing)
+        //public void Dispose()
+        //{
+        //    Dispose(true);
+        //    GC.SuppressFinalize(this);
+        //}
+
+        //protected virtual void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        _dbContext.Dispose();
+        //    }
+        //}
+
+
+        public  IEnumerable<T> Find(
+            Expression<Func<T, bool>> filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            string includeProperties = "")
         {
-            if (disposing)
+            IQueryable<T> query = _dbContext.Set<T>();
+
+            if (filter != null)
             {
-                _dbContext.Dispose();
+                query = query.Where(filter);
+            }
+
+            foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).ToList();
+            }
+            else
+            {
+                return query.ToList();
             }
         }
     }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using FreshingStore.Logger.Extension;
 using FreshingStore.Logger.Logging;
 using FreshingStore.Repo.DataAccess;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace FreshingStore.API
 {
@@ -30,8 +32,9 @@ namespace FreshingStore.API
         {
             services.AddControllers(configure => {
                 configure.ReturnHttpNotAcceptable = true;               
-            }).AddXmlDataContractSerializerFormatters();
+            }).AddXmlDataContractSerializerFormatters(); //be able to response for application/xml format
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<AppDBContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("FreshDB")); });
 
 

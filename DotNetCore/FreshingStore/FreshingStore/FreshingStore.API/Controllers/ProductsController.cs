@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using FreshingStore.API.Models;
 using FreshingStore.Core.Entities;
 using FreshingStore.Logger.Logging;
 using FreshingStore.Service.Interface;
@@ -16,24 +18,27 @@ namespace FreshingStore.API.Controllers
     {
         private IProductService _productService;
         private readonly ILoggerManager _logger;
+        private readonly IMapper _mapper;
 
-        public ProductsController(IProductService productService, ILoggerManager logger)
+        public ProductsController(IProductService productService, ILoggerManager logger, IMapper mapper)
         {
             _productService = productService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         // GET: api/products
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<ActionResult<ProductDto>> Get()
         {
             var products = await _productService.GetProductsAsync();
-            return Ok(products);
+            var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
+            return Ok(productDtos);
         }
 
         // GET api/products/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<ActionResult<ProductDto>> Get(int id)
         {
             if (id <= 0)
                 return BadRequest();
@@ -41,8 +46,8 @@ namespace FreshingStore.API.Controllers
 
             if (product == null)
                 return NotFound();
-
-            return Ok(product);
+           
+            return Ok(_mapper.Map<ProductDto>(product));
         }
 
         // POST api/<ProductController>

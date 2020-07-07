@@ -1,4 +1,5 @@
 ﻿using FreshingStore.Core.Entities;
+using FreshingStore.Repo.Repository;
 using FreshingStore.Repo.Repository.Interfaces;
 using FreshingStore.Service.Interface;
 using Microsoft.Extensions.Logging;
@@ -14,13 +15,14 @@ namespace FreshingStore.Service.Services
        
         private readonly IUnitOfWork _uow;
         private readonly IRepository<Product> _repo;
-        private readonly ILogger _logger;
+      
 
-        public ProductService(IUnitOfWork unitOfWork, IRepository<Product> repo, ILogger<ProductService> logger)
+        public ProductService(IUnitOfWork unitOfWork)
         {
             _uow = unitOfWork;
-            _repo = repo;
-            _logger = logger;
+            _repo = new Repository<Product>(_uow);
+          
+           
         }     
         
         public async Task<IEnumerable<Product>> FindProductAsyn(Expression<Func<Product, bool>> predicate)
@@ -31,12 +33,7 @@ namespace FreshingStore.Service.Services
 
         public async Task<Product> GetProductAsync(int id)
         {
-            _logger.LogInformation("log information: get products");
-            _logger.LogWarning("warning");
-            _logger.LogError("this is error");
-            _logger.LogCritical("critical");
-            _logger.LogTrace("Trace Log");
-            _logger.LogDebug("this is debug");
+         
             return await _repo.GetAsync(id);
         }
 
@@ -67,7 +64,14 @@ namespace FreshingStore.Service.Services
             await _repo.AddAsync(product);         
         }
 
-       public void Commit()
+        //public async Task<IEnumerable<ProductColor>> GetProductColorAsync(int ProductId)
+        //{
+        //    var productcolors = await _colorRepo.FindAsync(e=>e.ProductId== ProductId);
+        //    return productcolors;
+        //}
+
+
+        public void Commit()
         {
             _uow.Commit();
         }

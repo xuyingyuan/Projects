@@ -29,5 +29,12 @@ namespace FreshingStore.Repo.Repository
         {
             _dbcontext.Dispose();
         }
+
+        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+        {
+            throw new NotImplementedException();
+        }
+
+        
     }
 }
