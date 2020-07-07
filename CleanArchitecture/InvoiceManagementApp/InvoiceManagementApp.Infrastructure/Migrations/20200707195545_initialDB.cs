@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace InvoiceManagementApp.Api.Data.Migrations
+namespace InvoiceManagementApp.Infrastructure.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class initialDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

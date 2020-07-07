@@ -19,4 +19,8 @@
     <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\InvoiceManagementApp.Application\InvoiceManagementApp.Application.csproj" />
+  </ItemGroup>
+
 </Project>
