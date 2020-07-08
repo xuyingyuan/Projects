@@ -13,9 +13,14 @@ using Microsoft.Extensions.Hosting;
 using InvoiceManagementApp.Infrastructure;
 using InvoiceManagementApp.Application.Common.Interfaces;
 using InvoiceManagementApp.Api.Services;
+using InvoiceManagementApp.Application;
 
 namespace InvoiceManagementApp.Api
 {
+    //https://www.youtube.com/watch?v=LH57cG1td9U&list=PLCD61PtQOOG0P2a4AK_xjHGB1m9Hi3quP&index=3
+    //- follow CQRS(Command Query Responsibility Segregation) approach in handling data.
+    //- use MediatR to handle the mappings of request to response 
+    //- FluentValidation for validation.
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -28,6 +33,7 @@ namespace InvoiceManagementApp.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplication();
             services.AddInfrastructure(Configuration);
             services.AddScoped<ICurrentUserService, CurrentUserService>();
            
