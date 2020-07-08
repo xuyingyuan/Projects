@@ -14,6 +14,9 @@ using InvoiceManagementApp.Infrastructure;
 using InvoiceManagementApp.Application.Common.Interfaces;
 using InvoiceManagementApp.Api.Services;
 using InvoiceManagementApp.Application;
+using System.Linq;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
 namespace InvoiceManagementApp.Api
 {
@@ -36,7 +39,9 @@ namespace InvoiceManagementApp.Api
             services.AddApplication();
             services.AddInfrastructure(Configuration);
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-           
+
+            
+
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -45,6 +50,24 @@ namespace InvoiceManagementApp.Api
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
+            });
+
+            //without authentication: 
+            //services.AddOpenApiDocument()
+
+            //with authentication
+            services.AddOpenApiDocument(configure =>
+            {
+                configure.Title = "InvoiceManagementApp API";
+                configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+
+                configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
             });
         }
 
@@ -62,6 +85,10 @@ namespace InvoiceManagementApp.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
