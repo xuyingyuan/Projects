@@ -4,8 +4,20 @@ import { Route, Redirect } from 'react-router-dom'
 import { ApplicationPaths, QueryParameterNames } from './ApiAuthorizationConstants'
 import authService from './AuthorizeService'
 
-export default class AuthorizeRoute extends Component {
-    constructor(props) {
+interface IProps {
+    component: any,
+    path: any
+}
+
+interface IState {
+    ready: boolean,
+    authenticated: boolean
+}
+
+export default class AuthorizeRoute extends Component<IProps, IState> {
+    _subscription: any;
+
+    constructor(props: IProps) {
         super(props);
 
         this.state = {
@@ -25,10 +37,7 @@ export default class AuthorizeRoute extends Component {
 
     render() {
         const { ready, authenticated } = this.state;
-        var link = document.createElement("a");
-        link.href = this.props.path;
-        const returnUrl = `${link.protocol}//${link.host}${link.pathname}${link.search}${link.hash}`;
-        const redirectUrl = `${ApplicationPaths.Login}?${QueryParameterNames.ReturnUrl}=${encodeURI(returnUrl)}`
+        const redirectUrl = `${ApplicationPaths.Login}?${QueryParameterNames.ReturnUrl}=${encodeURI(window.location.href)}`
         if (!ready) {
             return <div></div>;
         } else {
