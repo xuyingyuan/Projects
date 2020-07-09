@@ -75,6 +75,7 @@ namespace FreshingStore.API
         private void  addStoreServices(IServiceCollection services)
         {
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductColorService, ProductColorService>();
         }
     }
 }

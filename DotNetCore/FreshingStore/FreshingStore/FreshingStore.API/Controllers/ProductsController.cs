@@ -7,6 +7,7 @@ using FreshingStore.API.Models;
 using FreshingStore.Core.Entities;
 using FreshingStore.Logger.Logging;
 using FreshingStore.Service.Interface;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -29,16 +30,19 @@ namespace FreshingStore.API.Controllers
 
         // GET: api/products
         [HttpGet]
-        public async Task<ActionResult<ProductDto>> Get()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
         {
             var products = await _productService.GetProductsAsync();
+            if (products.Count() == 0)
+                return NotFound();
+
             var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
             return Ok(productDtos);
         }
 
         // GET api/products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductDto>> Get(int id)
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             if (id <= 0)
                 return BadRequest();
@@ -66,13 +70,27 @@ namespace FreshingStore.API.Controllers
             _productService.Commit();
         }
 
+
+
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
-        public  void Delete(int id)
+        public async Task Delete(int id)
         {
-            var product = _productService.GetProduct(id);
+            var product = await _productService.GetProductAsync(id);
              _productService.RemoveProduct(product);
             _productService.Commit();
+        }
+
+        public IActionResult PartialUpdateProduct(int id, JsonPatchDocument<ProductDto> patchProduct)
+        {
+            var patchProductDto = new ProductDto();
+            patchProduct.ApplyTo(patchProductDto, ModelState);
+
+            var productToUpd = _mapper.Map<Product>(patchProductDto);
+            productToUpd.Id = id;
+            _productService.UpdProduct(productToUpd);
+            _productService.Commit();
+            return CreatedAtRoute("GetProductById", new { id});
         }
     }
 }

@@ -12,7 +12,7 @@ namespace FreshingStore.Repo.Repository.Interfaces
        
 
         T Get(int id);      
-        IEnumerable<T> GetAll();       
+     
         IEnumerable<T> Find(Expression<Func<T, bool>> predicate); 
         void Add(T entity);       
         void AddRange(IEnumerable<T> entities);      
@@ -30,6 +30,8 @@ namespace FreshingStore.Repo.Repository.Interfaces
          Expression<Func<T, bool>> filter = null,
          Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
          string includeProperties = "");
+
+      
 
     }
 }

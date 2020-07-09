@@ -32,8 +32,7 @@ namespace FreshingStore.Service.Services
         }
 
         public async Task<Product> GetProductAsync(int id)
-        {
-         
+        {         
             return await _repo.GetAsync(id);
         }
 

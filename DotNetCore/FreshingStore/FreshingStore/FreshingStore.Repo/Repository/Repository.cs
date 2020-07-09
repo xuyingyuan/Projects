@@ -27,6 +27,7 @@ namespace FreshingStore.Repo.Repository
             _dbContext = _unitOfWork._dbcontext;
         }
 
+       
         public T Get(int id)
         {
             return _dbContext.Set<T>().Find(id);

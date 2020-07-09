@@ -9,7 +9,7 @@ namespace FreshingStore.Service.Interface
 {
     public interface IProductService
     {
-        Product GetProduct(int id);
+       
         Task<IEnumerable<Product>> GetProductsAsync();
         Task<Product> GetProductAsync(int id);
         Task<IEnumerable<Product>> FindProductAsyn(Expression<Func<Product, bool>> predicate);
