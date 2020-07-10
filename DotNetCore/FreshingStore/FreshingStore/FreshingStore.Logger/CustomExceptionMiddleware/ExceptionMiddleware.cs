@@ -27,7 +27,7 @@ namespace FreshingStore.Logger.CustomExceptionMiddleware
             }
             catch (Exception ex)
             {
-                _logger.Error($"Something went wrong: {ex}");
+                _logger.Error($"Something went wrong: {ex.Message}");
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
@@ -40,8 +40,8 @@ namespace FreshingStore.Logger.CustomExceptionMiddleware
             return context.Response.WriteAsync(new ErrorDetails()
             {
                 StatusCode = context.Response.StatusCode,
-                Message = "Internal Server Error from the custom middleware."
-            }.ToString());
+                Message = $"Error occure: {exception.Message}"
+            }.ToString()); ;
         }
     }
 }

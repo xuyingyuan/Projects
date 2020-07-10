@@ -8,7 +8,7 @@ namespace FreshingStore.Repo.Repository.Interfaces
 {
     public interface IProductColorRepository:IRepository<ProductColor>
     {
-        Task<IEnumerable<ProductColor>> GetProductColorsByProductIdAsync(int productid);
+        Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, int? colorid);
         string GetProductColorDefaultImageUrl(int productid, int colorid);
     }
 }

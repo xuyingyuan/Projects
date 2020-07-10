@@ -19,6 +19,7 @@ namespace FreshingStore.API.Profiles
         {
             CreateMap<Product, ProductDto>();
             CreateMap<ProductColor, ProductColorDto>();
+            CreateMap<ProductImage, ProductImageDto>();
         }
 
         private void MappingDtoToEntity()

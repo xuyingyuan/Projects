@@ -13,5 +13,7 @@ namespace FreshingStore.API.Models
         public decimal? ColorPriceOverride { get; set; }
         public bool? IsDefaultColor { get; set; }   
         public string ColorImageUrl { get; set; }
+
+        public virtual ICollection<ProductImageDto> ProductImageDtos { get; set; }
     }
 }

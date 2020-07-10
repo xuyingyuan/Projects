@@ -13,7 +13,7 @@ namespace FreshingStore.Repo.Repository
     {
         public ProductColorRespository(IUnitOfWork unitOfWork) : base(unitOfWork) { }
 
-        public string GetProductColorDefaultImageUrl(int productid, int colorid)
+        public  string GetProductColorDefaultImageUrl(int productid, int colorid)
         {
             return _dbContext.ProductImages.Where(pi => pi.ProductId == productid 
                                                 && pi.ColorId == colorid
@@ -21,12 +21,17 @@ namespace FreshingStore.Repo.Repository
                                                 && pi.ImageTypeCode=="FRN").FirstOrDefault().ProductImageUrl;
         }
 
-        public async Task<IEnumerable<ProductColor>> GetProductColorsByProductIdAsync(int productid)
+
+        
+
+        public async Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, int? colorid)
         {
             var productcolors = await (from pc in _dbContext.ProductColors
                                  join c in _dbContext.Colors  on pc.ColorId equals c.Id  
                                  join p in _dbContext.Products on pc.ProductId equals p.Id                              
-                                where pc.ProductId == productid && pc.Deleted == null
+                                where pc.ProductId == productid 
+                                    && pc.Deleted == null
+                                    && (colorid==null || pc.ColorId==colorid)
                                 select new ProductColor
                                 {
                                     Id = pc.Id,

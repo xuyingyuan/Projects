@@ -8,7 +8,9 @@ namespace FreshingStore.Service.Interface
 {
    public  interface IProductColorService
     {
-        Task<IEnumerable<ProductColor>> GetProductColorsByProductIdAsync(int productid);
+        Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, int? colorid);
         string GetProductcolorDefaultImageUrl(int productid, int colorid);
+
+       
     }
 }

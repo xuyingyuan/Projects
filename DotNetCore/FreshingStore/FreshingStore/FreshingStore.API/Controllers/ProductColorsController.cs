@@ -17,28 +17,49 @@ namespace FreshingStore.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IProductColorService _productColorService;
+        private readonly IProductImagesService _productImagesService;
 
         public ProductColorsController(IMapper mapper, 
-            IProductColorService productColorService)
+            IProductColorService productColorService,
+            IProductImagesService productImageSersvice)
         {
             _mapper = mapper;
             _productColorService = productColorService;
+            _productImagesService = productImageSersvice;
         }
 
-        // GET: api/<ProductColorsController>
+        
         [HttpGet]
+        [HttpHead]  //HttpHead: for testing Head method
         public async Task<ActionResult<IEnumerable<ProductColorDto>>> GetProductColors(int productid)
         {
-            var productcolor = await _productColorService.GetProductColorsByProductIdAsync(productid);
-            var productcolorDtos = _mapper.Map< IEnumerable<ProductColorDto>>(productcolor);
+            var productcolors = await _productColorService.GetProductColorsByIdAsync(productid, null);
+            if (!productcolors.Any())
+                return NotFound();
+
+            var productImages = await _productImagesService.GetProductImages(productid, null);
+            var productcolorDtos = _mapper.Map<IEnumerable<ProductColorDto>>(productcolors);
+            var productImagesDtos = _mapper.Map<IEnumerable<ProductImageDto>>(productImages);
+            foreach(var productcolorDto in productcolorDtos)
+            { 
+                productcolorDto.ProductImageDtos = productImagesDtos.Where(pi => pi.ColorId == productcolorDto.ColorId).ToList();
+            }
             return Ok(productcolorDtos);
         }
 
         // GET api/<ProductColorsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{colorid}")]
+        public async Task<ActionResult<ProductColorDto>> GetProductColorById(int productid, int colorid)
         {
-            return "value";
+            var productcolor = (await _productColorService.GetProductColorsByIdAsync(productid, colorid)).SingleOrDefault();
+            if (productcolor == null)
+                return NotFound();                    
+            var productImages = await _productImagesService.GetProductImages(productid, colorid);
+            var productcolorDto = _mapper.Map<ProductColorDto>(productcolor);
+            if (productImages.Any())
+                productcolorDto.ProductImageDtos = _mapper.Map<IEnumerable<ProductImageDto>>(productImages).ToList(); 
+
+            return Ok(productcolorDto);
         }
 
         // POST api/<ProductColorsController>

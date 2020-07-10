@@ -28,10 +28,13 @@ namespace FreshingStore.Service.Services
             return _productcolor.GetProductColorDefaultImageUrl(productid, colorid);
         }
 
-        public async Task<IEnumerable<ProductColor>>  GetProductColorsByProductIdAsync(int productid)
+     
+        public async Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, int? colorid)
         {
-            var Productcolors = await _productcolor.GetProductColorsByProductIdAsync(productid);
+            var Productcolors = await _productcolor.GetProductColorsByIdAsync(productid, colorid);
             return Productcolors;
         }
+
+      
     }
 }
