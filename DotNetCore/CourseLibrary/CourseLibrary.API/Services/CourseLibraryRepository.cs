@@ -132,7 +132,6 @@ namespace CourseLibrary.API.Services
 
         public PageList<Author> GetAuthors(AuthorResourceParameters authorResourceParameters)
         {
-
             string mainCategory = authorResourceParameters.MainCategory;
             string searchQuery = authorResourceParameters.SearchQuery;
 

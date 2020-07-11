@@ -7,6 +7,7 @@ namespace FreshingStore.API.Models
 {
     public class ProductColorDto
     {
+        public int Id { get; set; }
         public int ProductId { get; set; }
         public int ColorId { get; set; }
         public string ColorDescription { get; set; }

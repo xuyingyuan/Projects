@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FreshingStore.Core.Entities
 {
@@ -14,7 +16,12 @@ namespace FreshingStore.Core.Entities
         }
 
     
+       [Required]
+       [MaxLength(50)]
         public string ProductName { get; set; }
+
+        [Required]
+        [MaxLength(300)]
         public string ProductDescription { get; set; }
         public int? SizeScaleId { get; set; }
         public decimal? Price { get; set; }

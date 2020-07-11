@@ -66,9 +66,7 @@ namespace FreshingStore.Repo.DataAccess
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer("Name=FreshDB");
-            }
-
-           
+            }           
         }
 
     }

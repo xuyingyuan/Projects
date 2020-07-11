@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using FreshingStore.API.Models;
+using FreshingStore.Core.Entities;
 using FreshingStore.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,14 +19,17 @@ namespace FreshingStore.API.Controllers
         private readonly IMapper _mapper;
         private readonly IProductColorService _productColorService;
         private readonly IProductImagesService _productImagesService;
+        private readonly IProductService _productService;
 
         public ProductColorsController(IMapper mapper, 
             IProductColorService productColorService,
-            IProductImagesService productImageSersvice)
+            IProductImagesService productImageSersvice,
+            IProductService productService)
         {
             _mapper = mapper;
             _productColorService = productColorService;
             _productImagesService = productImageSersvice;
+            _productService = productService;
         }
 
         
@@ -48,7 +52,7 @@ namespace FreshingStore.API.Controllers
         }
 
         // GET api/<ProductColorsController>/5
-        [HttpGet("{colorid}")]
+        [HttpGet("{colorid}", Name ="GetProductcolor")]
         public async Task<ActionResult<ProductColorDto>> GetProductColorById(int productid, int colorid)
         {
             var productcolor = (await _productColorService.GetProductColorsByIdAsync(productid, colorid)).SingleOrDefault();
@@ -62,10 +66,28 @@ namespace FreshingStore.API.Controllers
             return Ok(productcolorDto);
         }
 
-        // POST api/<ProductColorsController>
+      
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<ProductColorDto>> CreateColorsForProduct(int productid, ProductColorForCreationDto productColorCreationDto)
         {
+            if (!_productService.ProductExist(productid))
+            {
+                return NotFound();
+            }
+
+            var productcolor = _mapper.Map<ProductColor>(productColorCreationDto);
+            productcolor.ProductId = productid;
+            var added = await _productColorService.AddProductColorAsync(productcolor);
+            if (!added)
+                return BadRequest("Prodoct and Color already exists");
+
+            _productColorService.Commit();
+            var productcolorDto = _mapper.Map<ProductColorDto>(productcolor);
+            return CreatedAtRoute("GetProductcolor",
+                    new { productid = productid, colorid = productcolorDto.ColorId },
+                    productcolorDto);
+          
+
         }
 
         // PUT api/<ProductColorsController>/5

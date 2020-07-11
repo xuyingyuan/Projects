@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FreshingStore.Service.Interface
 {
-    public interface IProductImagesService
+    public interface IProductImagesService:IbaseService
     {
         Task<IEnumerable<ProductImage>> GetProductImages(int productid, int? colorid, string defaultType = "");
     }

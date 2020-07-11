@@ -31,7 +31,7 @@ namespace FreshingStore.Core.EntityMaps
                 .WithMany(p => p.ProductColors)
                 .HasForeignKey(d => d.ColorId)
                 .OnDelete(DeleteBehavior.ClientNoAction)
-                .HasForeignKey("FK_ProductColor_Color");
+                .HasConstraintName("FK_ProductColor_Color");
         }
     }
 

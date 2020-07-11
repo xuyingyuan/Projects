@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace FreshingStore.Service.Services
 {
-    public class ProductImagesService:IProductImagesService
+    public class ProductImagesService: BaseService, IProductImagesService
     {
-        protected AppDBContext _dbContext;
+        
 
-        public ProductImagesService(AppDBContext appDBContext)
+        public ProductImagesService(AppDBContext appDBContext):base(appDBContext)
         {
-            _dbContext = appDBContext;
+           
         }
 
         public async Task<IEnumerable<ProductImage>> GetProductImages(int productid, int? colorid, string defaultType="")
