@@ -27,6 +27,7 @@ namespace FreshingStore.Core.EntityMaps
                 .HasForeignKey(d => d.ImageTypeCode)
                 .HasConstraintName("FK_ProductImage_ImageType");
 
+          
             builder.HasOne(d => d.Product)
                 .WithMany(p => p.ProductImages)
                 .HasForeignKey(d => d.ProductId)

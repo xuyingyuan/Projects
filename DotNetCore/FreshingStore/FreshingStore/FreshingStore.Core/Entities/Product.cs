@@ -20,7 +20,7 @@ namespace FreshingStore.Core.Entities
        [MaxLength(50)]
         public string ProductName { get; set; }
 
-        [Required]
+        
         [MaxLength(300)]
         public string ProductDescription { get; set; }
         public int? SizeScaleId { get; set; }

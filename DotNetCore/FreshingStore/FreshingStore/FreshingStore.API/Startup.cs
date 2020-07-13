@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using System;
 
 namespace FreshingStore.API
@@ -35,7 +36,12 @@ namespace FreshingStore.API
         {
             services.AddControllers(configure => {
                 configure.ReturnHttpNotAcceptable = true;               
-            }).AddXmlDataContractSerializerFormatters() //be able to accept and response for application/xml format
+            })
+            .AddNewtonsoftJson(setupAction =>
+            {   //for httppatch - depatchdocument
+                setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            })
+            .AddXmlDataContractSerializerFormatters() //be able to accept and response for application/xml format
             .ConfigureApiBehaviorOptions(setupAction =>
             {
                 //Report Error: for more detail error message in body if there is validation error

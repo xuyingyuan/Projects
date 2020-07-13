@@ -16,5 +16,7 @@ namespace FreshingStore.Core.Entities
         public string ProductImageUrl { get; set; }     
         public virtual ImageType ImageTypeNavigation { get; set; }
         public virtual Product Product { get; set; }
+
+
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FreshingStore.API.Helpers;
 using FreshingStore.API.Models;
+using FreshingStore.API.Models.Product;
 using FreshingStore.Core.Entities;
 using FreshingStore.Logger.Logging;
 using FreshingStore.Service.Interface;

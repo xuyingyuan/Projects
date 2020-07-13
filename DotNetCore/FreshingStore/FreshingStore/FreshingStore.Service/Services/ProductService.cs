@@ -66,12 +66,22 @@ namespace FreshingStore.Service.Services
 
         public void RemoveProduct(Product product)
         {
+            var productid = product.Id;          
             _dbContext.Products.Remove(product);
-        }
 
+            var productcolors = _dbContext.ProductColors.Where(p => p.Deleted == null
+                        && p.ProductId == productid);
+            var productImages = _dbContext.ProductImages.Where(p => p.Deleted == null
+                        && p.ProductId == productid);
+
+            _dbContext.ProductColors.RemoveRange(productcolors);
+            _dbContext.ProductImages.RemoveRange(productImages);
+        }
+       
+      
         public void UpdProduct(Product product)
         {
-            _dbContext.Products.Update(product);
+           
         }
 
         public async Task AddProductAsync(Product product)
@@ -85,11 +95,8 @@ namespace FreshingStore.Service.Services
 
         }
 
-        public bool ProductExist(int productid)
-        {
-           return _dbContext.Products.Any(p => p.Id == productid);
 
-        }
+        
 
     }
     

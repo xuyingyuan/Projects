@@ -1,4 +1,5 @@
 ﻿using FreshingStore.API.Models;
+using FreshingStore.API.Models.Product;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,12 +13,16 @@ namespace FreshingStore.API.ValidateAttributes
         protected override ValidationResult IsValid(object value, 
             ValidationContext validationContext)
         {
-            var product = (ProductForCreationDto)validationContext.ObjectInstance;
-            if(product.ProductName == product.ProductDescription)
-            {
-                return new ValidationResult(ErrorMessage,
-                    new[] { nameof(ProductForCreationDto) });
-            }
+            var containerType = validationContext.ObjectInstance.GetType();
+
+            var product = (ProductForManupulationDto)value; //validationContext.ObjectInstance;
+            
+                if (product.ProductName == product.ProductDescription)
+                {
+                    return new ValidationResult(ErrorMessage,
+                        new[] { nameof(ProductColorForManipulationDto) });                   
+                }
+           
             return ValidationResult.Success;
         }
     }

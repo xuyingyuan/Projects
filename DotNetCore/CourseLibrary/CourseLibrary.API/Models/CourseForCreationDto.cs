@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CourseLibrary.API.Models
 {
-    [CourseTitleMustBeDifferntFromDescription(ErrorMessage = "Title must be different from description.")]
+
     public class CourseForCreationDto : CourseForManipulationDto //:IValidatableObject
     {
        

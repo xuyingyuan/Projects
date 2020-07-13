@@ -6,7 +6,13 @@ using AutoMapper;
 using FreshingStore.API.Models;
 using FreshingStore.Core.Entities;
 using FreshingStore.Service.Interface;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -68,14 +74,14 @@ namespace FreshingStore.API.Controllers
 
       
         [HttpPost]
-        public async Task<ActionResult<ProductColorDto>> CreateColorsForProduct(int productid, ProductColorForCreationDto productColorCreationDto)
+        public async Task<ActionResult<ProductColorDto>> CreateColorsForProduct(int productid, ProductColorForCreationDto productColorForCreationDto)
         {
-            if (!_productService.ProductExist(productid))
+            if (!_productService.ExistsProduct(productid))
             {
                 return NotFound();
             }
 
-            var productcolor = _mapper.Map<ProductColor>(productColorCreationDto);
+            var productcolor = _mapper.Map<ProductColor>(productColorForCreationDto);
             productcolor.ProductId = productid;
             var added = await _productColorService.AddProductColorAsync(productcolor);
             if (!added)
@@ -91,15 +97,121 @@ namespace FreshingStore.API.Controllers
         }
 
         // PUT api/<ProductColorsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{colorid}")]
+        public async Task<IActionResult> UpdateProductColor(int productid, int colorid, [FromBody] ProductColorForUpdDto productcolorForUpdDto)
         {
+            
+            if (!_productService.ExistsProduct(productid))
+            {
+                return NotFound();
+            }
+
+            if(productid <= 0 || colorid <= 0)
+                return NotFound();
+
+            //since we already know colorid, we will do upsert: 
+            //if productid and colorid not exists in product color, we can add it, if exists, we will do update
+            if (!_productColorService.ExistsProductColor(productid, colorid))
+            {
+                var productcolorForCreate = _mapper.Map<ProductColor>(productcolorForUpdDto);
+                productcolorForCreate.ProductId = productid;
+                productcolorForCreate.ColorId = colorid;
+                await _productColorService.AddProductColorAsync(productcolorForCreate);
+                _productColorService.Commit();
+                var productcolorDto = _mapper.Map<ProductColorDto>(productcolorForCreate);
+                return CreatedAtRoute("GetProductcolor", new { productid, colorid }, productcolorDto);
+            }
+
+            var productColorEntity = await _productColorService.GetProductColorByProductAndColorIdAsync(productid, colorid);
+
+            _mapper.Map(productcolorForUpdDto, productColorEntity);                     
+             _productColorService.UpdProductColor(productColorEntity);
+            _productColorService.Commit();
+            return NoContent();
+        }
+
+        [HttpPatch("{colorid}")]
+        /*action: Patch
+         * content-type: application/json-patch+json
+         * sample body: 
+         * [{   
+                "op": "replace",
+                "path": "/colordescription",
+                "value": "patch desc repalce"    
+            }]
+         */
+        public async Task<IActionResult> PartiallyUpdateProductColor(int productid, int colorid,
+                 JsonPatchDocument<ProductColorForUpdDto> patchDocument)
+        {
+            if (!_productService.ExistsProduct(productid))
+            {
+                return NotFound();
+            }
+
+            if (productid <= 0 || colorid <= 0)
+                return NotFound();
+
+            var productcolor = await _productColorService.GetProductColorByProductAndColorIdAsync(productid, colorid);
+            
+
+            if (productcolor == null) // with upsert - we can add new productcolor here
+            {
+                var productcolorUpdDto = new ProductColorForUpdDto();
+                patchDocument.ApplyTo(productcolorUpdDto, ModelState);
+                if (!TryValidateModel(productcolorUpdDto))
+                {
+                    return ValidationProblem(ModelState);
+                }
+                var productcolorToAdd = _mapper.Map<ProductColor>(productcolorUpdDto);
+                productcolorToAdd.ProductId = productid;
+                productcolorToAdd.ColorId = colorid;
+                await _productColorService.AddProductColorAsync(productcolorToAdd);
+                _productColorService.Commit();
+
+                var productcolorDto = _mapper.Map<ProductColorDto>(productcolorToAdd);
+                return CreatedAtRoute("GetProductcolor", new { productid, colorid }, productcolorDto);
+
+              
+            }
+
+            var productcolorToPatch = _mapper.Map<ProductColorForUpdDto>(productcolor);
+
+            patchDocument.ApplyTo(productcolorToPatch, ModelState);           
+            //after apply pathdocument, we need to validate ojbect
+            if(!TryValidateModel(productcolorToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(productcolorToPatch, productcolor);
+            _productColorService.UpdProductColor(productcolor);
+            _productColorService.Commit();
+            return NoContent();
+
         }
 
         // DELETE api/<ProductColorsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{colorid}")]
+        public async Task<IActionResult> DeleteProductcolor(int productid, int colorid)
         {
+            if(!_productColorService.ExistsProductColor(productid, colorid))
+            {
+                return NotFound();
+            }
+
+            var ProductColor = await _productColorService.GetProductColorByProductAndColorIdAsync(productid, colorid);
+            await _productColorService.DeleteProductColor(ProductColor);
+            _productColorService.Commit();
+
+            return NoContent();
+        }
+
+        //override validationProblem method to have more detailed error output.
+        public override ActionResult ValidationProblem(
+            [ActionResultObjectValue] ModelStateDictionary modelStateDictionary )
+        {
+            var options = HttpContext.RequestServices.GetRequiredService<IOptions<ApiBehaviorOptions>>();
+            return (ActionResult)options.Value.InvalidModelStateResponseFactory(ControllerContext);
         }
     }
 }

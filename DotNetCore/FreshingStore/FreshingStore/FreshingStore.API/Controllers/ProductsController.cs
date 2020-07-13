@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using FreshingStore.API.Models;
 using FreshingStore.Core.Entities;
 using FreshingStore.Logger.Logging;
 using FreshingStore.Service.Interface;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using FreshingStore.Service.ResourceParameters;
+using FreshingStore.API.Models.Product;
 
 namespace FreshingStore.API.Controllers
 {
@@ -71,21 +69,31 @@ namespace FreshingStore.API.Controllers
         
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Product product)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductForUpdDto productForUpdDto)
         {
+            var product = await _productService.GetProductAsync(id);
+            if (product == null)
+                return NotFound();
+
+            _mapper.Map(productForUpdDto, product);
             _productService.UpdProduct(product);
             _productService.Commit();
+            return NoContent();
         }
 
 
 
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
+            if (_productService.ExistsSku(id))
+                return BadRequest("You can't delete this product since SKUs already exists.");
+
             var product = await _productService.GetProductAsync(id);
-             _productService.RemoveProduct(product);
+            _productService.RemoveProduct(product);
             _productService.Commit();
+            return NoContent();
         }
 
         public IActionResult PartialUpdateProduct(int id, JsonPatchDocument<ProductDto> patchProduct)

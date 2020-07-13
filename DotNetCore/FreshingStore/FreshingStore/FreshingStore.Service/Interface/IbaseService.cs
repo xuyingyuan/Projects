@@ -11,5 +11,18 @@ namespace FreshingStore.Service.Interface
         Task CommitAsync();
 
         void Dispose();
+
+        bool ExistsProduct(int productid);
+        bool ExistsProductImage(int productid, string imagetype="");
+        bool ExistsProductImage(int productid, int colorid, string imagetype = "");
+      
+        bool ExistsProductColor(int productid);
+        bool ExistsProductColor(int productid, int colorid);
+        bool ExistsSku(int productid);
+        bool ExistsSku(int productid, int colorid);
+        bool ExistsSku(int productid, int colorid, string sizecode);
+
+
+
     }
 }

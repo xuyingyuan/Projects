@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace FreshingStore.API.Models
 {
-    public class ProductColorForCreationDto
-    {      
-        public int ColorId { get; set; }
+    public class ProductColorForUpdDto
+    {
         public string ColorDescription { get; set; }
         public decimal? ColorPriceOverride { get; set; }
-        public bool? IsDefaultColor { get; set; }       
-       
+        public bool? IsDefaultColor { get; set; }
+        public DateTime Modified { get; set; } = DateTime.UtcNow;
     }
 }

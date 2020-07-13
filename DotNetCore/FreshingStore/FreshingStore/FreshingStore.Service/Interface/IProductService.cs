@@ -16,7 +16,7 @@ namespace FreshingStore.Service.Interface
         Task<Product> GetProductAsync(int id);
         Task<IEnumerable<Product>> FindProductAsyn(Expression<Func<Product, bool>> predicate);
         Task  AddProductAsync(Product product);
-        bool ProductExist(int productid);
+       
         void UpdProduct(Product product);
         void RemoveProduct(Product product);
 
