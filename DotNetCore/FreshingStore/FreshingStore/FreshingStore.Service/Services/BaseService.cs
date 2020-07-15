@@ -33,17 +33,23 @@ namespace FreshingStore.Service.Services
 
         public bool ExistsProduct(int productid)
         {
+            if (productid <= 1)
+                return false;
             return _dbContext.Products.Where(p => p.Id == productid && p.Deleted==null).Any();
         }
          
         public bool ExistsSku(int productid)
         {
+            if (productid <= 1)
+                return false;
             return _dbContext.Skus.Where(p => p.Deleted == null
                                         && p.ProductId == productid).Any();
         }
 
         public bool ExistsSku(int productid, int colorid)
         {
+            if (productid <= 1 || colorid <= 1)
+                return false;
             return _dbContext.Skus.Where(p => p.Deleted == null
                                         && p.ProductId == productid
                                         && p.ColorId==colorid
@@ -52,6 +58,8 @@ namespace FreshingStore.Service.Services
 
         public bool ExistsSku(int productid, int colorid, string sizecode)
         {
+            if (productid <= 1 || colorid <= 1)
+                return false;
             return _dbContext.Skus.Where(p => p.Deleted == null
                                         && p.ProductId == productid
                                         && p.ColorId == colorid
@@ -63,6 +71,8 @@ namespace FreshingStore.Service.Services
 
         public bool ExistsProductColor(int productid)
         {
+            if (productid <= 1)
+                return false;
             return _dbContext.ProductColors.Where(p => p.Deleted == null
                                        && p.ProductId == productid                                    
                                        ).Any();
@@ -70,6 +80,8 @@ namespace FreshingStore.Service.Services
 
         public bool ExistsProductColor(int productid, int colorid)
         {
+            if (productid <= 1 || colorid <= 1)
+                return false;
             return _dbContext.ProductColors.Where(p => p.Deleted == null
                                        && p.ProductId == productid
                                        && p.ColorId == colorid
@@ -79,6 +91,8 @@ namespace FreshingStore.Service.Services
 
         public bool ExistsProductImage(int productid, int colorid, string imagetype = "")
         {
+            if (productid <= 1 || colorid <= 1)
+                return false;
             return _dbContext.ProductImages.Where(p => p.Deleted == null
              && p.ProductId == productid
              && p.ColorId == colorid
@@ -87,6 +101,8 @@ namespace FreshingStore.Service.Services
         }
         public bool ExistsProductImage(int productid, string imagetype = "")
         {
+            if (productid <= 1)
+                return false;
             return _dbContext.ProductImages.Where(p => p.Deleted == null
                && p.ProductId == productid
                && (imagetype == "" || p.ImageTypeCode == imagetype)
@@ -94,7 +110,14 @@ namespace FreshingStore.Service.Services
         }
 
 
-      
-
+       
+        public bool ExistsColor(int? colorid)
+        {
+            if (colorid == null || colorid <= 1)
+                return false;
+            return _dbContext.Colors.Where(p => p.Deleted == null
+                                       && p.Id == colorid
+                                       ).Any();
+        }
     }
 }

@@ -20,14 +20,9 @@ namespace FreshingStore.Service.Services
            
         }
 
-        public async Task<bool> AddProductColorAsync(ProductColor productColor)
+        public async Task AddProductColorAsync(ProductColor productColor)
         {
-           if(ExistsProductColor(productColor.ProductId, productColor.ColorId))
-            {
-               return false;
-            }
-            await  _dbContext.ProductColors.AddAsync(productColor);
-            return true;
+            await _dbContext.ProductColors.AddAsync(productColor);
         }
 
         public void UpdProductColor(ProductColor productColor)
@@ -35,28 +30,25 @@ namespace FreshingStore.Service.Services
                // _dbContext.ProductColors.Update(productColor);           
         }
 
-        public async Task DeleteProductColor(ProductColor productcolor)
+        public void RemoveProductColor(ProductColor productcolor)
         {
             var productid = productcolor.ProductId;
-            var colorid = productcolor.ColorId;              
-            productcolor.Deleted = DateTime.UtcNow;
-            await ProductImageUpdDeletedRange(productid, colorid);
-            await SkuUpdDeletedRange(productid, colorid);
-
-
-            //_dbContext.ProductColors.Remove(productcolor);
-            //_dbContext.ProductImages.RemoveRange(existProductImages);
+            var colorid = productcolor.ColorId;
+            _dbContext.Remove(productcolor);
+            //also need remove productImage for this product and color
+            ProductImageRemoveRange(productid, colorid);
+          
 
         }
 
-        private async Task ProductImageUpdDeletedRange(int productid, int colorid)
+        private void ProductImageRemoveRange(int productid, int colorid)
         {
             var existProductImages = _dbContext.ProductImages.Where(pi =>
                        pi.Deleted == null
                        && pi.ProductId == productid
                        && pi.ColorId == colorid);
-            await existProductImages.ForEachAsync(i => i.Deleted = DateTime.UtcNow);
-            _dbContext.ProductImages.UpdateRange(existProductImages);
+            //await existProductImages.ForEachAsync(i => i.Deleted = DateTime.UtcNow);
+            _dbContext.ProductImages.RemoveRange(existProductImages);
         }
 
         private async Task SkuUpdDeletedRange(int productid, int colorid)
@@ -68,19 +60,7 @@ namespace FreshingStore.Service.Services
             _dbContext.Skus.UpdateRange(existsSKUs);
         }
 
-        //public bool ProductColorExists(int productid, int colorid, int? productcolorid)
-        //{
-        //    if(productcolorid == null)
-        //        return (_dbContext.ProductColors.Any(pc => pc.ProductId == productid
-        //                                   && pc.ColorId == colorid
-        //                                   && pc.Deleted == null));
-
-        //    return (_dbContext.ProductColors.Any(pc => pc.Id == productcolorid
-        //                                   && pc.ProductId == productid
-        //                                  && pc.ColorId == colorid
-        //                                  && pc.Deleted == null));
-        //}
-
+      
         public string GetProductcolorDefaultImageUrl(int productid, int colorid)
         {            
             return _dbContext.ProductImages.Where(pi => pi.ProductId == productid
@@ -90,26 +70,41 @@ namespace FreshingStore.Service.Services
         }
 
      
-        public async Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, int? colorid)
+        public async Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid)
         {
-            return await (from pc in _dbContext.ProductColors
-                                       join c in _dbContext.Colors on pc.ColorId equals c.Id
-                                       join p in _dbContext.Products on pc.ProductId equals p.Id
-                                       where pc.ProductId == productid
-                                           && pc.Deleted == null
-                                           && (colorid == null || pc.ColorId == colorid)
-                                       select new ProductColor
-                                       {
-                                           Id = pc.Id,
-                                           ProductId = pc.ProductId,
-                                           ColorId = pc.ColorId,
-                                           ColorDescription = pc.ColorDescription == null ? c.Description : pc.ColorDescription,
-                                           ColorPriceOverride = pc.ColorPriceOverride != null ? pc.ColorPriceOverride : p.Price,
-                                           IsDefaultColor = pc.IsDefaultColor
-                                       }
-                                ).ToListAsync();
+            return await GetProductColorsAsync(productid, null, null).ToListAsync();          
+        }
 
-          
+        public async Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, 
+            IEnumerable<int> colorids)
+        {
+            return await GetProductColorsAsync(productid, null, colorids).ToListAsync();
+        }
+
+        public async Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, int colorid)
+        {
+            return await GetProductColorsAsync(productid, colorid, null).ToListAsync();
+        }
+        private IQueryable<ProductColor> GetProductColorsAsync(int productid, int? colorid, IEnumerable<int>? colorids)
+        {
+            var query =  (from pc in _dbContext.ProductColors
+                          join c in _dbContext.Colors on pc.ColorId equals c.Id
+                          join p in _dbContext.Products on pc.ProductId equals p.Id
+                          where pc.ProductId == productid
+                              && pc.Deleted == null
+                              && (colorid == null || pc.ColorId == colorid)
+                              && (colorids == null || colorids.Contains(pc.ColorId))
+                          select new ProductColor
+                          {
+                              Id = pc.Id,
+                              ProductId = pc.ProductId,
+                              ColorId = pc.ColorId,
+                              ColorDescription = pc.ColorDescription == null ? c.Description : pc.ColorDescription,
+                              ColorPriceOverride = pc.ColorPriceOverride != null ? pc.ColorPriceOverride : p.Price,
+                              IsDefaultColor = pc.IsDefaultColor
+                          });
+
+            return query;
         }
 
         public async Task<ProductColor> GetProductColorByProductAndColorIdAsync(int productid, int colorid)

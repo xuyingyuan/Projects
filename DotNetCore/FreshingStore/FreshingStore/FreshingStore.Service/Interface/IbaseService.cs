@@ -21,6 +21,7 @@ namespace FreshingStore.Service.Interface
         bool ExistsSku(int productid);
         bool ExistsSku(int productid, int colorid);
         bool ExistsSku(int productid, int colorid, string sizecode);
+        bool ExistsColor(int? colorid);
 
 
 

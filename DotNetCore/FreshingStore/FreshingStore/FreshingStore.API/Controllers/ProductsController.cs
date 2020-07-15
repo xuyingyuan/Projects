@@ -109,9 +109,9 @@ namespace FreshingStore.API.Controllers
         }
 
         [HttpOptions]
-        public IActionResult GetAuthorsOptions()
+        public IActionResult GetProductsOptions()
         {
-            Response.Headers.Add("Allow", "GET,POST,OPTIONS");
+            Response.Headers.Add("Allow", "GET,POST,PUT,DELETE,OPTIONS");
             return Ok();
         }
     }

@@ -8,14 +8,16 @@ namespace FreshingStore.Service.Interface
 {
    public  interface IProductColorService:IbaseService
     {
-        Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, int? colorid);
+        Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid);
+        Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, int colorid);
+        Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, IEnumerable<int> colorids);
 
         Task<ProductColor> GetProductColorByProductAndColorIdAsync(int productid, int colorid);
 
-        Task<bool> AddProductColorAsync(ProductColor productColor);
-
+        Task AddProductColorAsync(ProductColor productColor);
+        
         void UpdProductColor(ProductColor productColor);
-        Task DeleteProductColor(ProductColor productcolor);
+        void RemoveProductColor(ProductColor productcolor);
 
         string GetProductcolorDefaultImageUrl(int productid, int colorid);
 

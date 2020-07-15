@@ -82,12 +82,12 @@ namespace FreshingStore.API.Controllers
             }
 
             var productcolor = _mapper.Map<ProductColor>(productColorForCreationDto);
-            productcolor.ProductId = productid;
-            var added = await _productColorService.AddProductColorAsync(productcolor);
-            if (!added)
+            var colorid = productcolor.ColorId;
+            if(_productColorService.ExistsProductColor(productid, colorid))
                 return BadRequest("Prodoct and Color already exists");
-
-            _productColorService.Commit();
+            productcolor.ProductId = productid;
+            await  _productColorService.AddProductColorAsync(productcolor);
+            await _productColorService.CommitAsync();
             var productcolorDto = _mapper.Map<ProductColorDto>(productcolor);
             return CreatedAtRoute("GetProductcolor",
                     new { productid = productid, colorid = productcolorDto.ColorId },
@@ -126,7 +126,7 @@ namespace FreshingStore.API.Controllers
 
             _mapper.Map(productcolorForUpdDto, productColorEntity);                     
              _productColorService.UpdProductColor(productColorEntity);
-            _productColorService.Commit();
+            await _productColorService.CommitAsync();
             return NoContent();
         }
 
@@ -166,12 +166,9 @@ namespace FreshingStore.API.Controllers
                 productcolorToAdd.ProductId = productid;
                 productcolorToAdd.ColorId = colorid;
                 await _productColorService.AddProductColorAsync(productcolorToAdd);
-                _productColorService.Commit();
-
+                await _productColorService.CommitAsync();
                 var productcolorDto = _mapper.Map<ProductColorDto>(productcolorToAdd);
-                return CreatedAtRoute("GetProductcolor", new { productid, colorid }, productcolorDto);
-
-              
+                return CreatedAtRoute("GetProductcolor", new { productid, colorid }, productcolorDto);              
             }
 
             var productcolorToPatch = _mapper.Map<ProductColorForUpdDto>(productcolor);
@@ -185,7 +182,7 @@ namespace FreshingStore.API.Controllers
 
             _mapper.Map(productcolorToPatch, productcolor);
             _productColorService.UpdProductColor(productcolor);
-            _productColorService.Commit();
+            await _productColorService.CommitAsync();
             return NoContent();
 
         }
@@ -199,9 +196,13 @@ namespace FreshingStore.API.Controllers
                 return NotFound();
             }
 
+            if(_productColorService.ExistsSku(productid, colorid))
+            {
+                return BadRequest("This product color will not be deleted, since SKUs already exists.");
+            }
             var ProductColor = await _productColorService.GetProductColorByProductAndColorIdAsync(productid, colorid);
-            await _productColorService.DeleteProductColor(ProductColor);
-            _productColorService.Commit();
+            _productColorService.RemoveProductColor(ProductColor);
+            await _productColorService.CommitAsync();
 
             return NoContent();
         }
@@ -212,6 +213,13 @@ namespace FreshingStore.API.Controllers
         {
             var options = HttpContext.RequestServices.GetRequiredService<IOptions<ApiBehaviorOptions>>();
             return (ActionResult)options.Value.InvalidModelStateResponseFactory(ControllerContext);
+        }
+
+        [HttpOptions]
+        public IActionResult GetProductColorOptions()
+        {
+            Response.Headers.Add("Allow", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
+            return Ok();
         }
     }
 }

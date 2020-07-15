@@ -55,7 +55,7 @@ namespace FreshingStore.API.Controllers
             {
                 await _productService.AddProductAsync(product);
             }
-            _productService.Commit();
+            await _productService.CommitAsync();
             var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
             var idsString = string.Join(",", productDtos.Select(a => a.Id.ToString()));
             return CreatedAtRoute("GetAuthorCollection", new {ids= idsString }, productDtos);
