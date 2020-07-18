@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using FreshingStore.API.Models;
-using FreshingStore.API.Models.Product;
+using FreshingStore.Models.Models;
+using FreshingStore.Models.Models.Product;
 using FreshingStore.Core.Entities;
 using System;
 using System.Collections.Generic;

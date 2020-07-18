@@ -1,5 +1,5 @@
-﻿using FreshingStore.API.Models;
-using FreshingStore.API.Models.Product;
+﻿using FreshingStore.Models.Models;
+using FreshingStore.Models.Models.Product;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

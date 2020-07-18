@@ -81,9 +81,27 @@ namespace FreshingStore.Service.Services
             return await GetProductColorsAsync(productid, null, colorids).ToListAsync();
         }
 
+
         public async Task<IEnumerable<ProductColor>> GetProductColorsByIdAsync(int productid, int colorid)
         {
-            return await GetProductColorsAsync(productid, colorid, null).ToListAsync();
+            var productcolor= await (from pc in _dbContext.ProductColors
+                         join c in _dbContext.Colors on pc.ColorId equals c.Id
+                         join p in _dbContext.Products on pc.ProductId equals p.Id
+                         where pc.ProductId == productid
+                             && pc.Deleted == null
+                             && ( pc.ColorId == colorid)                           
+                         select new ProductColor
+                         {
+                             Id = pc.Id,
+                             ProductId = pc.ProductId,
+                             ColorId = pc.ColorId,
+                             ColorDescription = pc.ColorDescription == null ? c.Description : pc.ColorDescription,
+                             ColorPriceOverride = pc.ColorPriceOverride != null ? pc.ColorPriceOverride : p.Price,
+                             IsDefaultColor = pc.IsDefaultColor
+                         }).ToListAsync();
+            return productcolor;
+
+            //            return await GetProductColorsAsync(productid, colorid, null).ToListAsync();
         }
         private IQueryable<ProductColor> GetProductColorsAsync(int productid, int? colorid, IEnumerable<int>? colorids)
         {

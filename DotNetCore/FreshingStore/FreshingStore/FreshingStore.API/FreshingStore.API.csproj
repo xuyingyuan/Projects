@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FreshingStore.Core\FreshingStore.Core.csproj" />
     <ProjectReference Include="..\FreshingStore.Logger\FreshingStore.Logger.csproj" />
+    <ProjectReference Include="..\FreshingStore.Models\FreshingStore.Models.csproj" />
     <ProjectReference Include="..\FreshingStore.Repo\FreshingStore.Repo.csproj" />
     <ProjectReference Include="..\FreshingStore.Service\FreshingStore.Service.csproj" />
   </ItemGroup>

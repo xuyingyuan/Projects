@@ -8,7 +8,7 @@ using FreshingStore.Service.Interface;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using FreshingStore.Service.ResourceParameters;
-using FreshingStore.API.Models.Product;
+using FreshingStore.Models.Models.Product;
 
 namespace FreshingStore.API.Controllers
 {

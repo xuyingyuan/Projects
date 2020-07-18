@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using FreshingStore.API.Helpers;
-using FreshingStore.API.Models;
+using FreshingStore.Models.Models;
 using FreshingStore.Core.Entities;
 using FreshingStore.Service.Interface;
 using Microsoft.AspNetCore.Http;

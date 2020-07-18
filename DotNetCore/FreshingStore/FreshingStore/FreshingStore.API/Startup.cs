@@ -37,10 +37,14 @@ namespace FreshingStore.API
             services.AddControllers(configure => {
                 configure.ReturnHttpNotAcceptable = true;               
             })
-            .AddNewtonsoftJson(setupAction =>
-            {   //for httppatch - depatchdocument
-                setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
             })
+            //.AddNewtonsoftJson(setupAction =>
+            //{   //for httppatch - depatchdocument
+            //    setupAction.SerializerSettings.ContractResolver =  new CamelCasePropertyNamesContractResolver();
+            //})
             .AddXmlDataContractSerializerFormatters() //be able to accept and response for application/xml format
             .ConfigureApiBehaviorOptions(setupAction =>
             {
