@@ -1,6 +1,6 @@
 ﻿namespace FreshingStore.IntegrationTests
 {
-    public class CreatePostRequest
+    public class CreateGetRequest
     {
     }
 }

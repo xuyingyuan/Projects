@@ -1,13 +1,21 @@
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace FreshingStore.Moq
 {
-    public class UnitTest1
+    public class ProductServiceTests
     {
+        
         [Fact]
-        public void Test1()
+        public async Task GetProductAsync_shouldReturnProduct_WhenProductExists()
         {
+            //Arrange
+
+            //Act
+
+            //Asert
+
 
         }
     }
