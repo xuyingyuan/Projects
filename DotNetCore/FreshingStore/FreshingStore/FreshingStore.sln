@@ -13,9 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreshingStore.Service", "Fr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreshingStore.Logger", "FreshingStore.Logger\FreshingStore.Logger.csproj", "{03E85539-30CD-42E9-88E2-107F89ADF650}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreshingStore.Web", "FreshingStore.Web\FreshingStore.Web.csproj", "{7C3A8459-B2FE-4F0A-9742-63D736123EC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreshingStore.Web", "FreshingStore.Web\FreshingStore.Web.csproj", "{7C3A8459-B2FE-4F0A-9742-63D736123EC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreshingStore.Models", "FreshingStore.Models\FreshingStore.Models.csproj", "{1AD952C3-AA3A-4A96-9665-35111AC006E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreshingStore.Models", "FreshingStore.Models\FreshingStore.Models.csproj", "{1AD952C3-AA3A-4A96-9665-35111AC006E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreshingStore.Moq", "FreshingStore.Moq\FreshingStore.Moq.csproj", "{4651864E-E2C0-4E18-B184-5EFBC61E0BE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreshingStore.IntegrationTests", "FreshingStore.IntegrationTests\FreshingStore.IntegrationTests.csproj", "{B342C7FC-173F-4DA5-B2AD-17F05038F2C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{1AD952C3-AA3A-4A96-9665-35111AC006E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AD952C3-AA3A-4A96-9665-35111AC006E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AD952C3-AA3A-4A96-9665-35111AC006E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4651864E-E2C0-4E18-B184-5EFBC61E0BE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4651864E-E2C0-4E18-B184-5EFBC61E0BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4651864E-E2C0-4E18-B184-5EFBC61E0BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4651864E-E2C0-4E18-B184-5EFBC61E0BE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B342C7FC-173F-4DA5-B2AD-17F05038F2C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B342C7FC-173F-4DA5-B2AD-17F05038F2C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B342C7FC-173F-4DA5-B2AD-17F05038F2C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B342C7FC-173F-4DA5-B2AD-17F05038F2C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

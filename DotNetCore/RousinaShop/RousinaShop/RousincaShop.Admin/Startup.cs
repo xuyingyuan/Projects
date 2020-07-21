@@ -42,6 +42,7 @@ namespace RousincaShop.Admin
 
             services.AddScoped<IProductColorService, ProductColorService>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<IloggerService, TestableLogger>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

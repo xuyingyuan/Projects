@@ -21,7 +21,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 
 namespace FreshingStore.API
-{
+{//https://www.youtube.com/watch?v=7roqteWLw4s
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -93,6 +93,7 @@ namespace FreshingStore.API
                 });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddDbContext<AppDBContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("FreshDB")); });
             services.AddSingleton<ILoggerManager, LoggerManager>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

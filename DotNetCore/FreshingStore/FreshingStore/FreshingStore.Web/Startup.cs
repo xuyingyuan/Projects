@@ -34,7 +34,7 @@ namespace FreshingStore.Web
            // create an HttpClient used for accessing the API
            services.AddHttpClient("APIClient", client =>
            {
-               client.BaseAddress = new Uri("https://localhost:44345/");
+               client.BaseAddress = new Uri("http://localhost:90/");  //("https://localhost:44345/");
                client.DefaultRequestHeaders.Clear();
                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
            });
