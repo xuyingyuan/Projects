@@ -1,0 +1,41 @@
+﻿update production.products
+set product_name = 'my aa tests'
+where product_id = 3
+
+delete production.products
+where product_id = 300
+
+select *, BINARY_CHECKSUM(product_id, product_name, brand_id, category_id, model_year, list_price) rowChecksum 
+into #tmptable
+from production.products
+
+
+
+merge into dbo.products as target 
+using
+(select top 9223372036854775807
+* from #tmptable) as source
+on target.product_id = source.product_id
+
+when matched and target.rowChecksum <> source.rowchecksum
+then update
+	set product_name=source.product_name,
+	brand_id = source.brand_id,
+	category_id = source.category_id,
+	model_year = source.model_year,
+	list_price=source.list_price,
+	rowChecksum = source.rowChecksum
+when not matched by target then 
+insert ( product_name, brand_id, category_id, model_year, list_price, rowChecksum)
+values(product_name, brand_id, category_id, model_year, list_price, rowChecksum)
+when not matched by source then
+delete 
+OUTPUT $action, 
+DELETED.Product_ID AS TargetProductID, 
+DELETED.Product_Name AS TargetProductName, 
+
+INSERTED.Product_ID AS SourceProductID, 
+INSERTED.Product_Name AS SourceProductName;
+ 
+
+ drop table #tmptable
